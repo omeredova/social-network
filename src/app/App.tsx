@@ -1,5 +1,5 @@
 import { AppProviders } from '@/app/providers/AppProviders';
 
-export const App = () => {
+export function App(){
   return <AppProviders />
 }

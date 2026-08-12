@@ -1,6 +1,6 @@
 
 
-export const HomePage = () => {
+export function HomePage(){
   return (
     <main className="grid min-h-screen place-items-center px-6">
       <section className="space-y-4 text-center">
