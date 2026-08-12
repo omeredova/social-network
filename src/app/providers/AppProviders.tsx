@@ -6,7 +6,7 @@ import { router } from '@/app/router/router';
 
 configureMobX()
 
-export const AppProviders = () => {
+export function AppProviders(){
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} context={{ queryClient }} />
