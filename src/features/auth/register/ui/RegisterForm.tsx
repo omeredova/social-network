@@ -10,22 +10,33 @@ import {
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 
-export function LoginForm() {
+export function RegisterForm() {
   return (
     <Card className="w-full max-w-sm">
       <form>
         <CardHeader>
-          <CardTitle className="text-center">Login to your account</CardTitle>
+          <CardTitle className="text-center">Register your account</CardTitle>
           <CardDescription className="text-center text-login-txt">
-            Enter your username and password to access your account
+            Create your account in less than a minute
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
-              <Label htmlFor="login-email">Email</Label>
+              <Label htmlFor="register-name">Full name</Label>
               <Input
-                id="login-email"
+                id="register-name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                placeholder="John Doe"
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="register-email">Email</Label>
+              <Input
+                id="register-email"
                 name="email"
                 type="email"
                 autoComplete="email"
@@ -34,12 +45,24 @@ export function LoginForm() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="login-password">Password</Label>
+              <Label htmlFor="register-password">Password</Label>
               <Input
-                id="login-password"
+                id="register-password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="register-password-confirmation">
+                Confirm password
+              </Label>
+              <Input
+                id="register-password-confirmation"
+                name="passwordConfirmation"
+                type="password"
+                autoComplete="new-password"
                 required
               />
             </div>
@@ -47,7 +70,7 @@ export function LoginForm() {
         </CardContent>
         <CardFooter className="flex-col gap-2">
           <Button type="submit" variant="outline" className="w-full">
-            Login
+            Register
           </Button>
         </CardFooter>
       </form>

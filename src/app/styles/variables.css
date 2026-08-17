@@ -1,3 +1,22 @@
 @theme {
   --color-login-txt: #8a969c;
+
+  --color-post-surface: #ffffff;
+  --color-post-toolbar: #eef2f7;
+  --color-post-toolbar-hover: #e3e9f0;
+  --color-post-foreground: #313a46;
+  --color-post-muted: #6c757d;
+  --color-post-action: #313a46;
+  --color-post-action-hover: #262e37;
+  --color-post-action-link: #6c757d;
+  --color-post-action-link-hover: #727cf5;
+  --color-post-border: #e3e8ee;
+  --color-post-focus: #8e98a4;
+
+  --radius-post-card: 0.25rem;
+  --radius-post-control: 0.2rem;
+
+  --shadow-post-card: 0 1px 3px rgb(49 58 70 / 8%);
+  --shadow-post-control: 0 2px 6px rgb(238 242 247 / 50%);
+  --shadow-post-action: 0 2px 6px rgb(49 58 70 / 50%);
 }
