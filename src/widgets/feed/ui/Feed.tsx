@@ -16,7 +16,7 @@ export function Feed({ posts, isLoading = false }: FeedProps) {
       <CreatePost />
       <div className="space-y-5">
         {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
+          <PostCard key={post.id} post={post} linked />
         ))}
       </div>
     </>

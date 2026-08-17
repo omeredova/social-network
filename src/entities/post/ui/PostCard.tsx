@@ -1,26 +1,35 @@
 import { Heart, MessageCircle, Reply } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 import { Button } from '@/shared/ui/button';
+import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { Card, CardContent, CardFooter, CardHeader } from '@/shared/ui/card';
 import type { Post } from '../model/types';
 
 interface PostCardProps {
   post: Post
+  linked?: boolean
 }
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, linked = false }: PostCardProps) {
   return (
-    <Card className="overflow-hidden rounded-post-card border-post-border bg-post-surface shadow-post-card">
+    <Card className="relative overflow-hidden rounded-post-card border-post-border bg-post-surface shadow-post-card">
+      {linked && (
+        <Link
+          to="/posts/$postId"
+          params={{ postId: post.id }}
+          className="absolute inset-0 z-10 rounded-post-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-post-focus"
+          aria-label={`Open post by ${post.author}`}
+        />
+      )}
       <CardHeader className="flex-row items-center gap-3 space-y-0 p-5 pb-3">
-        <div
-          className={`grid size-10 shrink-0 place-items-center text-xs font-semibold text-white ${post.avatarShape === 'circle' ? 'rounded-full' : 'rounded-post-control'}`}
-          style={{ backgroundColor: post.avatarColor }}
-          aria-label={`${post.author} avatar`}
-        >
-          {post.author
-            .split(' ')
-            .map((name) => name[0])
-            .join('')}
-        </div>
+        <Avatar className="size-10">
+          <AvatarFallback
+            className="text-xs font-semibold text-white"
+            style={{ backgroundColor: post.avatarColor }}
+          >
+            {post.author.split(' ').map((name) => name[0]).join('')}
+          </AvatarFallback>
+        </Avatar>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-post-foreground">
             {post.author}
@@ -42,7 +51,7 @@ export function PostCard({ post }: PostCardProps) {
         )}
       </CardContent>
 
-      <CardFooter className="gap-1 border-t border-post-border px-4 py-2">
+      <CardFooter className="relative z-20 gap-1 border-t border-post-border px-4 py-2">
         <ActionButton label="Reply" count={post.replies} icon={Reply} />
         <ActionButton label="Like" count={post.likes} icon={Heart} />
         <ActionButton
