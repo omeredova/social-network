@@ -1,6 +1,6 @@
-import { RegisterForm } from '@/features/auth/login/ui/RegisterForm'
-import { Link } from '@tanstack/react-router'
-import { AuthPageLayout } from './AuthPageLayout'
+import { Link } from '@tanstack/react-router';
+import { RegisterForm } from '@/features/auth/register';
+import { AuthPageLayout } from './AuthPageLayout';
 
 export function RegisterPage() {
   return (
