@@ -3,7 +3,6 @@ export interface Post {
   readonly author: string
   readonly handle: string
   readonly avatarColor: string
-  readonly avatarShape: 'circle' | 'square'
   readonly publishedAt: string
   readonly text: string
   readonly imageUrl?: string
@@ -11,4 +10,14 @@ export interface Post {
   readonly likes: number
   readonly replies: number
   readonly comments: number
+}
+
+export interface Comment {
+  readonly id: string
+  readonly author: string
+  readonly handle: string
+  readonly avatarColor: string
+  readonly publishedAt: string
+  readonly text: string
+  readonly likes: number
 }
