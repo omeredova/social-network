@@ -13,10 +13,15 @@
   --color-post-border: #e3e8ee;
   --color-post-focus: #8e98a4;
 
+  --color-profile-page: #f6f8f5;
+  --color-profile-accent: #2b7a4b;
+
   --radius-post-card: 0.25rem;
   --radius-post-control: 0.2rem;
+  --radius-profile-card: 1rem;
 
   --shadow-post-card: 0 1px 3px rgb(49 58 70 / 8%);
   --shadow-post-control: 0 2px 6px rgb(238 242 247 / 50%);
   --shadow-post-action: 0 2px 6px rgb(49 58 70 / 50%);
+  --shadow-profile-avatar: 0 8px 24px rgb(49 58 70 / 18%);
 }

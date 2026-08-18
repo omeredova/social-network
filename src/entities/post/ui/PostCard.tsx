@@ -11,6 +11,8 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, linked = false }: PostCardProps) {
+  const profileId = post.handle.replace(/^@/, '')
+
   return (
     <Card className="relative overflow-hidden rounded-post-card border-post-border bg-post-surface shadow-post-card">
       {linked && (
@@ -22,21 +24,39 @@ export function PostCard({ post, linked = false }: PostCardProps) {
         />
       )}
       <CardHeader className="flex-row items-center gap-3 space-y-0 p-5 pb-3">
-        <Avatar className="size-10">
-          <AvatarFallback
-            className="text-xs font-semibold text-white"
-            style={{ backgroundColor: post.avatarColor }}
-          >
-            {post.author.split(' ').map((name) => name[0]).join('')}
-          </AvatarFallback>
-        </Avatar>
+        <Link
+          to="/profile/$profileId"
+          params={{ profileId }}
+          className="relative z-20 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-post-focus"
+          aria-label={`Open ${post.author}'s profile`}
+        >
+          <Avatar className="size-10">
+            <AvatarFallback
+              className="text-xs font-semibold text-white"
+              style={{ backgroundColor: post.avatarColor }}
+            >
+              {post.author.split(' ').map((name) => name[0]).join('')}
+            </AvatarFallback>
+          </Avatar>
+        </Link>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-post-foreground">
+          <Link
+            to="/profile/$profileId"
+            params={{ profileId }}
+            className="relative z-20 block truncate text-sm font-semibold text-post-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-post-focus"
+          >
             {post.author}
-          </p>
-          <p className="text-xs text-post-muted">
-            {post.handle} · {post.publishedAt} ago
-          </p>
+          </Link>
+          <div className="text-xs text-post-muted">
+            <Link
+              to="/profile/$profileId"
+              params={{ profileId }}
+              className="relative z-20 hover:text-post-action-link-hover hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-post-focus"
+            >
+              {post.handle}
+            </Link>
+            {' · '}{post.publishedAt} ago
+          </div>
         </div>
       </CardHeader>
 

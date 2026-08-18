@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountLoginRouteImport } from './routes/account/login'
 import { Route as AccountRegisterRouteImport } from './routes/account/register'
 import { Route as PostsPostIdRouteImport } from './routes/posts.$postId'
+import { Route as ProfileProfileIdRouteImport } from './routes/profile.$profileId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,25 @@ const PostsPostIdRoute = PostsPostIdRouteImport.update({
   path: '/posts/$postId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileProfileIdRoute = ProfileProfileIdRouteImport.update({
+  id: '/profile/$profileId',
+  path: '/profile/$profileId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account/login': typeof AccountLoginRoute
   '/account/register': typeof AccountRegisterRoute
   '/posts/$postId': typeof PostsPostIdRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account/login': typeof AccountLoginRoute
   '/account/register': typeof AccountRegisterRoute
   '/posts/$postId': typeof PostsPostIdRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,14 +61,30 @@ export interface FileRoutesById {
   '/account/login': typeof AccountLoginRoute
   '/account/register': typeof AccountRegisterRoute
   '/posts/$postId': typeof PostsPostIdRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/account/login' | '/account/register' | '/posts/$postId'
+  fullPaths:
+    | '/'
+    | '/account/login'
+    | '/account/register'
+    | '/posts/$postId'
+    | '/profile/$profileId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/account/login' | '/account/register' | '/posts/$postId'
+  to:
+    | '/'
+    | '/account/login'
+    | '/account/register'
+    | '/posts/$postId'
+    | '/profile/$profileId'
   id:
-    '__root__' | '/' | '/account/login' | '/account/register' | '/posts/$postId'
+    | '__root__'
+    | '/'
+    | '/account/login'
+    | '/account/register'
+    | '/posts/$postId'
+    | '/profile/$profileId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -68,6 +92,7 @@ export interface RootRouteChildren {
   AccountLoginRoute: typeof AccountLoginRoute
   AccountRegisterRoute: typeof AccountRegisterRoute
   PostsPostIdRoute: typeof PostsPostIdRoute
+  ProfileProfileIdRoute: typeof ProfileProfileIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -100,6 +125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostsPostIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile/$profileId': {
+      id: '/profile/$profileId'
+      path: '/profile/$profileId'
+      fullPath: '/profile/$profileId'
+      preLoaderRoute: typeof ProfileProfileIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -108,6 +140,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountLoginRoute: AccountLoginRoute,
   AccountRegisterRoute: AccountRegisterRoute,
   PostsPostIdRoute: PostsPostIdRoute,
+  ProfileProfileIdRoute: ProfileProfileIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
