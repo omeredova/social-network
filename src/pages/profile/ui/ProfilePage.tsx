@@ -1,10 +1,11 @@
-import { Link } from '@tanstack/react-router'
-import { MessageCircle } from 'lucide-react'
-import { getUserProfileById } from '@/entities/user'
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
-import { Button } from '@/shared/ui/button'
-import { Card, CardContent } from '@/shared/ui/card'
-import { ProfileActivityTabs } from './components/ProfileActivityTabs'
+import { Link } from '@tanstack/react-router';
+import { MessageCircle } from 'lucide-react';
+import { getUserProfileById } from '@/entities/user';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
+import { Button } from '@/shared/ui/button';
+import { Card, CardContent } from '@/shared/ui/card';
+import { PageBreadcrumb } from '@/shared/ui/page-breadcrumb';
+import { ProfileActivityTabs } from './components/ProfileActivityTabs';
 
 interface ProfilePageProps {
   profileId: string
@@ -27,8 +28,15 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-profile-page px-4 py-8 sm:px-6 sm:py-12">
+    <main className="min-h-screen px-4 py-10 sm:px-6 sm:py-16">
       <div className="mx-auto w-full max-w-2xl">
+        <PageBreadcrumb
+          items={[
+            { label: 'Feed', href: '/' },
+            { label: profile.name },
+          ]}
+        />
+
         <Card className="overflow-hidden rounded-profile-card border-post-border bg-post-surface shadow-post-card">
           <div
             className="h-36 bg-cover bg-center sm:h-48"
