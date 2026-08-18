@@ -5,6 +5,7 @@ import { Input } from '@/shared/ui/input';
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { MessageCircle } from 'lucide-react';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/shared/ui/empty';
+import { PageBreadcrumb } from '@/shared/ui/page-breadcrumb';
 
 interface PostPageProps {
   postId: string
@@ -29,8 +30,14 @@ export function PostPage({ postId }: PostPageProps) {
   const comments = commentsByPostId[post.id] ?? []
 
   return (
-    <main className="min-h-screen px-4 py-8 sm:px-6 sm:py-12">
+    <main className="min-h-screen px-4 py-10 sm:px-6 sm:py-16">
       <section className="mx-auto w-full max-w-2xl">
+        <PageBreadcrumb
+          items={[
+            { label: 'Feed', href: '/' },
+            { label: `${post.author}'s post` },
+          ]}
+        />
 
         <PostCard post={post} />
 
