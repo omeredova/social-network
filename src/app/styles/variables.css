@@ -1,6 +1,6 @@
 @theme {
   --color-login-txt: #8a969c;
-
+  --color-sidebar: rgb(108 117 125);
   --color-post-surface: #ffffff;
   --color-post-toolbar: #eef2f7;
   --color-post-toolbar-hover: #e3e9f0;
