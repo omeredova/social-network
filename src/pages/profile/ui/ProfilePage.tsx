@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { MessageCircle } from 'lucide-react';
-import { getUserProfileById } from '@/entities/user';
+import { useUserProfile } from '@/entities/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent } from '@/shared/ui/card';
@@ -12,14 +12,20 @@ interface ProfilePageProps {
 }
 
 export function ProfilePage({ profileId }: ProfilePageProps) {
-  const profile = getUserProfileById(profileId)
+  const { data: profile, isError } = useUserProfile(profileId)
 
   if (!profile) {
     return (
       <main className="grid min-h-screen place-items-center px-4">
         <div className="text-center">
-          <h1 className="font-serif text-4xl text-post-foreground">Profile not found</h1>
-          <Button asChild variant="link" className="mt-4 text-post-action-link-hover">
+          <h1 className="font-serif text-4xl text-post-foreground">
+            {isError ? 'Unable to load profile' : 'Profile not found'}
+          </h1>
+          <Button
+            asChild
+            variant="link"
+            className="mt-4 text-post-action-link-hover"
+          >
             <Link to="/">Return to the feed</Link>
           </Button>
         </div>
@@ -48,9 +54,16 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
           <CardContent className="relative px-5 pb-6 pt-0 sm:px-8 sm:pb-8">
             <div className="flex items-start justify-between gap-4">
               <Avatar className="-mt-12 size-24 border-4 border-post-surface shadow-profile-avatar sm:-mt-14 sm:size-28">
-                <AvatarImage src={profile.photoUrl} alt={profile.photoAlt} className="object-cover" />
+                <AvatarImage
+                  src={profile.photoUrl}
+                  alt={profile.photoAlt}
+                  className="object-cover"
+                />
                 <AvatarFallback className="bg-post-foreground text-xl font-semibold text-white">
-                  {profile.name.split(' ').map((part) => part[0]).join('')}
+                  {profile.name
+                    .split(' ')
+                    .map((part) => part[0])
+                    .join('')}
                 </AvatarFallback>
               </Avatar>
 
@@ -64,12 +77,16 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
               <h1 className="font-serif text-3xl leading-tight text-post-foreground sm:text-4xl">
                 {profile.name}
               </h1>
-              <p className="mt-1 text-sm font-medium text-post-muted">{profile.username}</p>
+              <p className="mt-1 text-sm font-medium text-post-muted">
+                {profile.username}
+              </p>
               <p className="mt-4 text-sm leading-6 text-post-foreground sm:text-base">
                 {profile.description}
               </p>
               <div className="mt-5 inline-flex items-baseline gap-2 border-l-2 border-profile-accent pl-3">
-                <strong className="text-xl tabular-nums text-post-foreground">{profile.postsCount}</strong>
+                <strong className="text-xl tabular-nums text-post-foreground">
+                  {profile.postsCount}
+                </strong>
                 <span className="text-sm text-post-muted">posts</span>
               </div>
             </div>

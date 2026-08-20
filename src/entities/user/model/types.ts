@@ -1,4 +1,4 @@
-import type { Comment, Post } from '@/entities/post';
+import type { Comment, Post } from '@/entities/post'
 
 export interface UserProfile {
   readonly id: string
@@ -12,3 +12,8 @@ export interface UserProfile {
   readonly posts: readonly Post[]
   readonly comments: readonly Comment[]
 }
+
+export type EditableUserProfile = Pick<
+  UserProfile,
+  'name' | 'coverUrl' | 'photoUrl' | 'username' | 'description'
+>
