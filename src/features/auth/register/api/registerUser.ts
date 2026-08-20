@@ -22,6 +22,12 @@ export async function registerUser({
   await setDoc(doc(firestore, 'users', userCredential.user.uid), {
     uid: userCredential.user.uid,
     email: userCredential.user.email,
+    name: userCredential.user.email?.split('@')[0] ?? 'New user',
+    username:
+      userCredential.user.email?.split('@')[0] ?? userCredential.user.uid,
+    description: '',
+    photoUrl: '',
+    coverUrl: '',
   })
 
   return userCredential

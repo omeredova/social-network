@@ -1,6 +1,6 @@
 import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '@/shared/config/firebase';
-import { getUserProfileById } from '../model/users.mock';
+import { getPostsByAuthor } from '@/entities/post';
 import type { EditableUserProfile, UserProfile } from '../model/types';
 
 function isEditableUserProfile(value: unknown): value is EditableUserProfile {
@@ -20,26 +20,19 @@ function isEditableUserProfile(value: unknown): value is EditableUserProfile {
 export async function getUserProfile(
   profileId: string,
 ): Promise<UserProfile | null> {
-  const mockProfile = getUserProfileById(profileId)
   const snapshot = await getDoc(doc(firestore, 'users', profileId))
   const storedProfile = snapshot.data()
 
-  if (!isEditableUserProfile(storedProfile)) return mockProfile ?? null
+  if (!isEditableUserProfile(storedProfile)) return null
 
-  if (!mockProfile) {
-    return {
-      id: profileId,
-      ...storedProfile,
-      photoAlt: `Portrait of ${storedProfile.name}`,
-      postsCount: 0,
-      posts: [],
-      comments: [],
-    }
-  }
+  const posts = await getPostsByAuthor(profileId)
 
   return {
-    ...mockProfile,
+    id: profileId,
     ...storedProfile,
     photoAlt: `Portrait of ${storedProfile.name}`,
+    postsCount: posts.length,
+    posts,
+    comments: [],
   }
 }

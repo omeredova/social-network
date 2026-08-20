@@ -14,11 +14,17 @@ export function Feed({ posts, isLoading = false }: FeedProps) {
   return (
     <>
       <CreatePost />
-      <div className="space-y-5">
-        {posts.map((post) => (
-          <PostCard key={post.id} post={post} linked />
-        ))}
-      </div>
+      {posts.length > 0 ? (
+        <div className="space-y-5">
+          {posts.map((post) => (
+            <PostCard key={post.id} post={post} linked />
+          ))}
+        </div>
+      ) : (
+        <p className="py-10 text-center text-sm text-post-muted">
+          No posts yet. Create the first one.
+        </p>
+      )}
     </>
   )
 }

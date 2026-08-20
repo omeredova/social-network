@@ -1,7 +1,18 @@
+import type { Timestamp } from 'firebase/firestore'
+
+export interface PostDocument {
+  readonly authorId: string
+  readonly content: string
+  readonly imageUrl: string
+  readonly createdAt: Timestamp
+}
+
 export interface Post {
   readonly id: string
+  readonly authorId: string
   readonly author: string
   readonly handle: string
+  readonly avatarUrl?: string
   readonly avatarColor: string
   readonly publishedAt: string
   readonly text: string

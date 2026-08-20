@@ -12,7 +12,15 @@ interface ProfilePageProps {
 }
 
 export function ProfilePage({ profileId }: ProfilePageProps) {
-  const { data: profile, isError } = useUserProfile(profileId)
+  const { data: profile, isLoading, isError } = useUserProfile(profileId)
+
+  if (isLoading) {
+    return (
+      <p role="status" className="p-10 text-sm text-post-muted">
+        Loading profile…
+      </p>
+    )
+  }
 
   if (!profile) {
     return (

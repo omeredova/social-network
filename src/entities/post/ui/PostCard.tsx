@@ -1,9 +1,9 @@
-import { Heart, MessageCircle, Reply } from 'lucide-react';
-import { Link } from '@tanstack/react-router';
-import { Button } from '@/shared/ui/button';
-import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
-import { Card, CardContent, CardFooter, CardHeader } from '@/shared/ui/card';
-import type { Post } from '../model/types';
+import { Heart, MessageCircle, Reply } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { Button } from '@/shared/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
+import { Card, CardContent, CardFooter, CardHeader } from '@/shared/ui/card'
+import type { Post } from '../model/types'
 
 interface PostCardProps {
   post: Post
@@ -11,7 +11,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, linked = false }: PostCardProps) {
-  const profileId = post.handle.replace(/^@/, '')
+  const profileId = post.authorId
 
   return (
     <Card className="relative overflow-hidden rounded-post-card border-post-border bg-post-surface shadow-post-card">
@@ -31,6 +31,10 @@ export function PostCard({ post, linked = false }: PostCardProps) {
           aria-label={`Open ${post.author}'s profile`}
         >
           <Avatar className="size-10">
+            <AvatarImage
+              src={post.avatarUrl}
+              alt={`Portrait of ${post.author}`}
+            />
             <AvatarFallback
               className="text-xs font-semibold text-white"
               style={{ backgroundColor: post.avatarColor }}
