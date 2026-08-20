@@ -10,11 +10,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/shared/ui/sidebar';
+import { useAuthUser } from '@/features/auth';
 
 const menuButtonClassName =
   'h-auto gap-1 rounded-none text-sm font-medium text-white transition-none hover:bg-sidebar'
 
 export function Sidebar() {
+  const { user, isLoading: isAuthLoading } = useAuthUser()
   const { logout, isPending: isLogoutPending, isError: isLogoutError } =
     useLogoutAction()
 
@@ -33,12 +35,23 @@ export function Sidebar() {
           <nav aria-label="Main navigation">
             <SidebarMenu className="flex-row flex-wrap gap-0 md:flex-col">
               <SidebarMenuItem>
-                <SidebarMenuButton asChild className={menuButtonClassName}>
-                  <Link to="/profile/$profileId" params={{ profileId: 'maya-brooks' }}>
+                {user ? (
+                  <SidebarMenuButton asChild className={menuButtonClassName}>
+                    <Link to="/profile/$profileId" params={{ profileId: user.uid }}>
+                      <User className="size-3.5" strokeWidth={1.8} aria-hidden="true" />
+                      <span>my profile</span>
+                    </Link>
+                  </SidebarMenuButton>
+                ) : (
+                  <SidebarMenuButton
+                    type="button"
+                    className={menuButtonClassName}
+                    disabled={isAuthLoading || !user}
+                  >
                     <User className="size-3.5" strokeWidth={1.8} aria-hidden="true" />
                     <span>my profile</span>
-                  </Link>
-                </SidebarMenuButton>
+                  </SidebarMenuButton>
+                )}
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton type="button" className={menuButtonClassName}>
@@ -47,9 +60,11 @@ export function Sidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton type="button" className={menuButtonClassName}>
-                  <Settings className="size-3.5" strokeWidth={1.8} aria-hidden="true" />
-                  <span>settings</span>
+                <SidebarMenuButton asChild className={menuButtonClassName}>
+                  <Link to="/settings">
+                    <Settings className="size-3.5" strokeWidth={1.8} aria-hidden="true" />
+                    <span>settings</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
