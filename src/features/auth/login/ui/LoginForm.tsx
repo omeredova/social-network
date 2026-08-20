@@ -1,56 +1,65 @@
-import { Button } from '@/shared/ui/button';
+import { useState, type SyntheticEvent } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/shared/ui/card';
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
+  validateAuthCredentials,
+  type AuthFieldErrors,
+} from '../../model/authCredentials';
+import { AuthCredentialsFields } from '../../ui/AuthCredentialsFields';
+import { AuthFormCard } from '../../ui/AuthFormCard';
+import { getLoginError } from '../model/getLoginError';
+import { useLogin } from '../model/useLogin';
 
 export function LoginForm() {
+  const navigate = useNavigate()
+  const loginMutation = useLogin()
+  const [validationErrors, setValidationErrors] = useState<AuthFieldErrors>({})
+
+  async function handleSubmit(
+    event: SyntheticEvent<HTMLFormElement>,
+  ): Promise<void> {
+    event.preventDefault()
+    loginMutation.reset()
+    setValidationErrors({})
+
+    const result = validateAuthCredentials(new FormData(event.currentTarget))
+
+    if (!result.credentials) {
+      setValidationErrors(result.errors)
+      return
+    }
+
+    try {
+      await loginMutation.mutateAsync(result.credentials)
+    } catch {
+      return
+    }
+
+    await navigate({ to: '/' })
+  }
+
+  const responseError = loginMutation.isError
+    ? getLoginError(loginMutation.error)
+    : null
+  const fieldErrors = {
+    ...validationErrors,
+    ...responseError?.fieldErrors,
+  }
+
   return (
-    <Card className="w-full max-w-sm">
-      <form>
-        <CardHeader>
-          <CardTitle className="text-center">Login to your account</CardTitle>
-          <CardDescription className="text-center text-login-txt">
-            Enter your username and password to access your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-6">
-            <div className="grid gap-2">
-              <Label htmlFor="login-email">Email</Label>
-              <Input
-                id="login-email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="login-password">Password</Label>
-              <Input
-                id="login-password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-              />
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" variant="outline" className="w-full">
-            Login
-          </Button>
-        </CardFooter>
-      </form>
-    </Card>
+    <AuthFormCard
+      title="Login to your account"
+      description="Enter your email and password to access your account"
+      errorMessage={responseError?.message ?? null}
+      isPending={loginMutation.isPending}
+      submitLabel="Login"
+      pendingLabel="Logging in…"
+      onSubmit={(event) => void handleSubmit(event)}
+    >
+      <AuthCredentialsFields
+        idPrefix="login"
+        passwordAutoComplete="current-password"
+        errors={fieldErrors}
+      />
+    </AuthFormCard>
   )
 }
