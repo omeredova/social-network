@@ -1,2 +1,4 @@
 export { getUserProfileById, usersMock } from './model/users.mock';
-export type { UserProfile } from './model/types';
+export type { EditableUserProfile, UserProfile } from './model/types';
+export { userProfileKeys } from './model/userProfileKeys';
+export { useUserProfile } from './model/useUserProfile';
