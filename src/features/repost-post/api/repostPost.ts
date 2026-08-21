@@ -1,4 +1,5 @@
 import { doc, increment, runTransaction, serverTimestamp } from 'firebase/firestore';
+import type { RepostedProfile } from '@/entities/post';
 import { firebaseAuth, firestore } from '@/shared/config/firebase';
 
 export interface RepostPostInput {
@@ -12,6 +13,20 @@ interface RepostSource {
   readonly imageUrl: string
   readonly originalPostId?: string
   readonly originalAuthorId?: string
+  readonly repostedProfile?: RepostedProfile
+}
+
+function isRepostedProfile(value: unknown): value is RepostedProfile {
+  if (!value || typeof value !== 'object') return false
+  const profile = value as Record<string, unknown>
+
+  return (
+    typeof profile.id === 'string' &&
+    typeof profile.name === 'string' &&
+    typeof profile.username === 'string' &&
+    typeof profile.description === 'string' &&
+    typeof profile.photoUrl === 'string'
+  )
 }
 
 function getRepostSource(value: unknown): RepostSource | null {
@@ -25,7 +40,9 @@ function getRepostSource(value: unknown): RepostSource | null {
     (post.originalPostId !== undefined &&
       typeof post.originalPostId !== 'string') ||
     (post.originalAuthorId !== undefined &&
-      typeof post.originalAuthorId !== 'string')
+      typeof post.originalAuthorId !== 'string') ||
+    (post.repostedProfile !== undefined &&
+      !isRepostedProfile(post.repostedProfile))
   ) {
     return null
   }
@@ -39,6 +56,9 @@ function getRepostSource(value: unknown): RepostSource | null {
       : {}),
     ...(typeof post.originalAuthorId === 'string'
       ? { originalAuthorId: post.originalAuthorId }
+      : {}),
+    ...(isRepostedProfile(post.repostedProfile)
+      ? { repostedProfile: post.repostedProfile }
       : {}),
   }
 }
@@ -81,6 +101,9 @@ export async function repostPost(input: RepostPostInput): Promise<string> {
       repostsCount: 0,
       originalPostId,
       originalAuthorId,
+      ...(source.repostedProfile
+        ? { repostedProfile: source.repostedProfile }
+        : {}),
     })
     transaction.update(doc(firestore, 'posts', originalPostId), {
       repostsCount: increment(1),

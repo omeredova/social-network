@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { PostCard, type Post, type PostCounterField } from '@/entities/post';
 import { useUpdatePost } from '../model/useUpdatePost';
 import { useAuthUser } from '@/features/auth';
+import { useDeletePost } from '@/features/delete-post';
 import { useRepostPost } from '@/features/repost-post';
 
 interface InteractivePostCardProps {
@@ -23,20 +24,24 @@ export function InteractivePostCard({
 }: InteractivePostCardProps) {
   const { user } = useAuthUser()
   const repostPost = useRepostPost()
+  const deletePost = useDeletePost()
   const { optimisticPost, liked, updateCounter, isUpdating } =
     useOptimisticUpdate(post)
   const canRepost =
     user !== null &&
     user.uid !== post.authorId &&
     user.uid !== post.originalAuthorId
+  const canDelete = user !== null && user.uid === post.authorId
 
   return (
     <PostCard
       post={optimisticPost}
       linked={linked}
       liked={liked}
-      isUpdating={isUpdating || repostPost.isPending}
+      isUpdating={isUpdating || repostPost.isPending || deletePost.isPending}
       canRepost={canRepost}
+      canDelete={canDelete}
+      deleteError={deletePost.isError ? deletePost.error.message : undefined}
       onLike={() => {
         updateCounter('likesCount', liked ? 'decrement' : 'increment')
       }}
@@ -47,6 +52,11 @@ export function InteractivePostCard({
       }}
       onComment={() => {
         updateCounter('commentsCount', 'increment')
+      }}
+      onDelete={() => {
+        if (user && canDelete) {
+          deletePost.mutate({ postId: post.id, userId: user.uid })
+        }
       }}
     />
   )
