@@ -1,0 +1,1 @@
+export { useRepostPost } from './model/useRepostPost';

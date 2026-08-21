@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { PostCard, type Post, type PostCounterField } from '@/entities/post';
 import { useUpdatePost } from '../model/useUpdatePost';
+import { useAuthUser } from '@/features/auth';
+import { useRepostPost } from '@/features/repost-post';
 
 interface InteractivePostCardProps {
   readonly post: Post
@@ -19,21 +21,29 @@ export function InteractivePostCard({
   post,
   linked = false,
 }: InteractivePostCardProps) {
-  const { optimisticPost, liked, reposted, updateCounter, isUpdating } =
+  const { user } = useAuthUser()
+  const repostPost = useRepostPost()
+  const { optimisticPost, liked, updateCounter, isUpdating } =
     useOptimisticUpdate(post)
+  const canRepost =
+    user !== null &&
+    user.uid !== post.authorId &&
+    user.uid !== post.originalAuthorId
 
   return (
     <PostCard
       post={optimisticPost}
       linked={linked}
       liked={liked}
-      reposted={reposted}
-      isUpdating={isUpdating}
+      isUpdating={isUpdating || repostPost.isPending}
+      canRepost={canRepost}
       onLike={() => {
         updateCounter('likesCount', liked ? 'decrement' : 'increment')
       }}
       onRepost={() => {
-        updateCounter('repostsCount', reposted ? 'decrement' : 'increment')
+        if (user && canRepost) {
+          repostPost.mutate({ postId: post.id, userId: user.uid })
+        }
       }}
       onComment={() => {
         updateCounter('commentsCount', 'increment')
@@ -46,7 +56,6 @@ function useOptimisticUpdate(post: Post) {
   const updatePost = useUpdatePost()
   const [deltas, setDeltas] = useState(INITIAL_DELTAS)
   const [liked, setLiked] = useState(false)
-  const [reposted, setReposted] = useState(false)
 
   const updateCounter = (
     field: PostCounterField,
@@ -56,7 +65,6 @@ function useOptimisticUpdate(post: Post) {
 
     setDeltas((current) => changeDelta(current, field, amount))
     if (field === 'likesCount') setLiked((current) => !current)
-    if (field === 'repostsCount') setReposted((current) => !current)
 
     updatePost.mutate(
       { postId: post.id, field, operation },
@@ -67,7 +75,6 @@ function useOptimisticUpdate(post: Post) {
         onError: () => {
           setDeltas((current) => changeDelta(current, field, -amount))
           if (field === 'likesCount') setLiked((current) => !current)
-          if (field === 'repostsCount') setReposted((current) => !current)
         },
       },
     )
@@ -81,7 +88,6 @@ function useOptimisticUpdate(post: Post) {
       replies: Math.max(0, post.replies + deltas.reposts),
     },
     liked,
-    reposted,
     updateCounter,
     isUpdating: updatePost.isPending,
   }
