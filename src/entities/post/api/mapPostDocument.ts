@@ -18,7 +18,10 @@ function isPostDocument(value: unknown): value is PostDocument {
     typeof post.imageUrl === 'string' &&
     typeof post.createdAt === 'object' &&
     post.createdAt !== null &&
-    'toDate' in post.createdAt
+    'toDate' in post.createdAt &&
+    typeof post.commentsCount === 'number' &&
+    typeof post.likesCount === 'number' &&
+    typeof post.repostsCount === 'number'
   )
 }
 
@@ -81,8 +84,8 @@ export async function mapPostDocument(
     ...(storedPost.imageUrl
       ? { imageUrl: storedPost.imageUrl, imageAlt: 'Post attachment' }
       : {}),
-    likes: 0,
-    replies: 0,
-    comments: 0,
+    likes: storedPost.likesCount,
+    replies: storedPost.repostsCount,
+    comments: storedPost.commentsCount,
   }
 }

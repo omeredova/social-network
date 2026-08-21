@@ -1,5 +1,6 @@
-import { PostCard, type Post } from '@/entities/post';
+import type { Post } from '@/entities/post';
 import { CreatePost } from '@/features/create-post';
+import { InteractivePostCard } from '@/features/update-post';
 
 interface FeedProps {
   posts: readonly Post[]
@@ -17,7 +18,7 @@ export function Feed({ posts, isLoading = false }: FeedProps) {
       {posts.length > 0 ? (
         <div className="space-y-5">
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} linked />
+            <InteractivePostCard key={post.id} post={post} linked />
           ))}
         </div>
       ) : (

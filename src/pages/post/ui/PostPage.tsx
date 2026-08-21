@@ -1,11 +1,12 @@
 import { Link } from '@tanstack/react-router';
-import { PostCard, usePost } from '@/entities/post';
+import { usePost } from '@/entities/post';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { MessageCircle } from 'lucide-react';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/shared/ui/empty';
 import { PageBreadcrumb } from '@/shared/ui/page-breadcrumb';
+import { InteractivePostCard } from '@/features/update-post';
 
 interface PostPageProps {
   postId: string
@@ -48,7 +49,7 @@ export function PostPage({ postId }: PostPageProps) {
           ]}
         />
 
-        <PostCard post={post} />
+        <InteractivePostCard post={post} />
 
         <section
           className="mt-3 bg-post-toolbar px-4 py-5 sm:px-5"
