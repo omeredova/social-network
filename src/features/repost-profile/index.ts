@@ -1,0 +1,1 @@
+export { useRepostProfile } from './model/useRepostProfile';

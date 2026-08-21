@@ -1,5 +1,13 @@
 import type { Timestamp } from 'firebase/firestore'
 
+export interface RepostedProfile {
+  readonly id: string
+  readonly name: string
+  readonly username: string
+  readonly description: string
+  readonly photoUrl: string
+}
+
 export interface PostDocument {
   readonly authorId: string
   readonly content: string
@@ -10,6 +18,7 @@ export interface PostDocument {
   readonly repostsCount: number
   readonly originalPostId?: string
   readonly originalAuthorId?: string
+  readonly repostedProfile?: RepostedProfile
 }
 
 export interface Post {
@@ -29,6 +38,7 @@ export interface Post {
   readonly originalPostId?: string
   readonly originalAuthorId?: string
   readonly originalAuthor?: string
+  readonly repostedProfile?: RepostedProfile
 }
 
 export interface Comment {

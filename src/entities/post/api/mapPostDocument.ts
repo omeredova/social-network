@@ -1,6 +1,6 @@
 import { doc, getDoc, type DocumentSnapshot } from 'firebase/firestore';
 import { firestore } from '@/shared/config/firebase';
-import type { Post, PostDocument } from '../model/types';
+import type { Post, PostDocument, RepostedProfile } from '../model/types';
 
 interface UserDocument {
   readonly name: string
@@ -25,7 +25,22 @@ function isPostDocument(value: unknown): value is PostDocument {
     (post.originalPostId === undefined ||
       typeof post.originalPostId === 'string') &&
     (post.originalAuthorId === undefined ||
-      typeof post.originalAuthorId === 'string')
+      typeof post.originalAuthorId === 'string') &&
+    (post.repostedProfile === undefined ||
+      isRepostedProfile(post.repostedProfile))
+  )
+}
+
+function isRepostedProfile(value: unknown): value is RepostedProfile {
+  if (!value || typeof value !== 'object') return false
+  const profile = value as Record<string, unknown>
+
+  return (
+    typeof profile.id === 'string' &&
+    typeof profile.name === 'string' &&
+    typeof profile.username === 'string' &&
+    typeof profile.description === 'string' &&
+    typeof profile.photoUrl === 'string'
   )
 }
 
@@ -103,6 +118,9 @@ export async function mapPostDocument(
           originalAuthorId: storedPost.originalAuthorId,
           originalAuthor: originalAuthor?.name ?? 'Unknown user',
         }
+      : {}),
+    ...(storedPost.repostedProfile
+      ? { repostedProfile: storedPost.repostedProfile }
       : {}),
   }
 }

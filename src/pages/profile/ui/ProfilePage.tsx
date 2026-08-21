@@ -1,6 +1,8 @@
 import { Link } from '@tanstack/react-router';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Repeat2 } from 'lucide-react';
 import { useUserProfile } from '@/entities/user';
+import { useAuthUser } from '@/features/auth';
+import { useRepostProfile } from '@/features/repost-profile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent } from '@/shared/ui/card';
@@ -11,8 +13,13 @@ interface ProfilePageProps {
   profileId: string
 }
 
+const profileActionButtonClassName =
+  'rounded-post-control border border-post-action bg-post-action px-4 text-post-toolbar shadow-post-action transition-all hover:-translate-y-0.5 hover:border-post-action-hover hover:bg-post-action-hover hover:text-post-toolbar hover:shadow-profile-avatar focus-visible:ring-post-focus'
+
 export function ProfilePage({ profileId }: ProfilePageProps) {
   const { data: profile, isLoading, isError } = useUserProfile(profileId)
+  const { user } = useAuthUser()
+  const repostProfile = useRepostProfile()
 
   if (isLoading) {
     return (
@@ -75,10 +82,28 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
                 </AvatarFallback>
               </Avatar>
 
-              <Button className="mt-4 rounded-post-control bg-post-action px-4 text-post-toolbar shadow-post-action hover:bg-post-action-hover focus-visible:ring-post-focus sm:mt-5">
-                <MessageCircle aria-hidden="true" />
-                Message
-              </Button>
+              <div className="mt-4 flex flex-wrap justify-end gap-2 sm:mt-5">
+                {user && user.uid !== profile.id && (
+                  <Button
+                    type="button"
+                    className={profileActionButtonClassName}
+                    disabled={repostProfile.isPending || repostProfile.isSuccess}
+                    onClick={() => {
+                      repostProfile.mutate({
+                        profileId: profile.id,
+                        userId: user.uid,
+                      })
+                    }}
+                  >
+                    <Repeat2 aria-hidden="true" />
+                    {repostProfile.isSuccess ? 'Reposted' : 'Repost'}
+                  </Button>
+                )}
+                <Button className={profileActionButtonClassName}>
+                  <MessageCircle aria-hidden="true" />
+                  Message
+                </Button>
+              </div>
             </div>
 
             <div className="mt-4 max-w-2xl">
@@ -91,6 +116,11 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
               <p className="mt-4 text-sm leading-6 text-post-foreground sm:text-base">
                 {profile.description}
               </p>
+              {repostProfile.isError && (
+                <p role="alert" className="mt-3 text-sm text-destructive">
+                  {repostProfile.error.message}
+                </p>
+              )}
               <div className="mt-5 inline-flex items-baseline gap-2 border-l-2 border-profile-accent pl-3">
                 <strong className="text-xl tabular-nums text-post-foreground">
                   {profile.postsCount}
