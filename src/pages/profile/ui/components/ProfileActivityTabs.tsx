@@ -1,6 +1,7 @@
 import { MessagesSquare } from 'lucide-react'
 import type { UserProfile } from '@/entities/user'
-import { CommentCard, PostCard } from '@/entities/post'
+import { CommentCard } from '@/entities/post'
+import { InteractivePostCard } from '@/features/update-post'
 import { Card } from '@/shared/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs'
 
@@ -37,7 +38,7 @@ export function ProfileActivityTabs({ profile }: ProfileActivityTabsProps) {
         <section aria-label="User posts" className="space-y-5">
           {profile.posts.length > 0 ? (
             profile.posts.map((post) => (
-              <PostCard key={post.id} post={post} linked />
+              <InteractivePostCard key={post.id} post={post} linked />
             ))
           ) : (
             <p className="py-10 text-center text-sm text-post-muted">

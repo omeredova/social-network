@@ -1,4 +1,4 @@
-import { Heart, MessageCircle, Reply } from 'lucide-react'
+import { Heart, MessageCircle, Repeat2 } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/shared/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
@@ -8,9 +8,24 @@ import type { Post } from '../model/types'
 interface PostCardProps {
   post: Post
   linked?: boolean
+  isUpdating?: boolean
+  liked?: boolean
+  reposted?: boolean
+  onLike?: () => void
+  onRepost?: () => void
+  onComment?: () => void
 }
 
-export function PostCard({ post, linked = false }: PostCardProps) {
+export function PostCard({
+  post,
+  linked = false,
+  isUpdating = false,
+  liked = false,
+  reposted = false,
+  onLike,
+  onRepost,
+  onComment,
+}: PostCardProps) {
   const profileId = post.authorId
 
   return (
@@ -76,12 +91,28 @@ export function PostCard({ post, linked = false }: PostCardProps) {
       </CardContent>
 
       <CardFooter className="relative z-20 gap-1 border-t border-post-border px-4 py-2">
-        <ActionButton label="Reply" count={post.replies} icon={Reply} />
-        <ActionButton label="Like" count={post.likes} icon={Heart} />
+        <ActionButton
+          label="Repost"
+          count={post.replies}
+          icon={Repeat2}
+          active={reposted}
+          disabled={isUpdating}
+          onClick={onRepost}
+        />
+        <ActionButton
+          label="Like"
+          count={post.likes}
+          icon={Heart}
+          active={liked}
+          disabled={isUpdating}
+          onClick={onLike}
+        />
         <ActionButton
           label="Comment"
           count={post.comments}
           icon={MessageCircle}
+          disabled={isUpdating}
+          onClick={onComment}
         />
       </CardFooter>
     </Card>
@@ -92,9 +123,19 @@ interface ActionButtonProps {
   label: string
   count: number
   icon: typeof Heart
+  active?: boolean
+  disabled?: boolean
+  onClick?: (() => void) | undefined
 }
 
-function ActionButton({ label, count, icon: Icon }: ActionButtonProps) {
+function ActionButton({
+  label,
+  count,
+  icon: Icon,
+  active = false,
+  disabled = false,
+  onClick,
+}: ActionButtonProps) {
   return (
     <Button
       type="button"
@@ -102,8 +143,15 @@ function ActionButton({ label, count, icon: Icon }: ActionButtonProps) {
       size="sm"
       className="h-8 rounded-post-control px-2 text-post-action-link hover:bg-post-toolbar hover:text-post-action-link-hover focus-visible:ring-post-focus"
       aria-label={`${label}, ${count.toString()}`}
+      aria-pressed={label === 'Comment' ? undefined : active}
+      disabled={disabled}
+      onClick={onClick}
     >
-      <Icon className="size-4" strokeWidth={1.8} aria-hidden="true" />
+      <Icon
+        className={active ? 'size-4 fill-current' : 'size-4'}
+        strokeWidth={1.8}
+        aria-hidden="true"
+      />
       <span>{label}</span>
       <span className="text-xs tabular-nums">{count}</span>
     </Button>

@@ -1,6 +1,6 @@
-import { doc, setDoc } from 'firebase/firestore'
-import { firestore } from '@/shared/config/firebase'
-import type { EditableUserProfile } from '@/entities/user'
+import { doc, setDoc } from 'firebase/firestore';
+import { firestore } from '@/shared/config/firebase';
+import type { EditableUserProfile } from '@/entities/user';
 
 export interface UpdateUserProfileInput {
   profileId: string

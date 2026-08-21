@@ -5,6 +5,9 @@ export interface PostDocument {
   readonly content: string
   readonly imageUrl: string
   readonly createdAt: Timestamp
+  readonly commentsCount: number
+  readonly likesCount: number
+  readonly repostsCount: number
 }
 
 export interface Post {
@@ -32,3 +35,8 @@ export interface Comment {
   readonly text: string
   readonly likes: number
 }
+
+export type PostCounterField = keyof Pick<
+  PostDocument,
+  'likesCount' | 'commentsCount' | 'repostsCount'
+>
