@@ -21,7 +21,11 @@ function isPostDocument(value: unknown): value is PostDocument {
     'toDate' in post.createdAt &&
     typeof post.commentsCount === 'number' &&
     typeof post.likesCount === 'number' &&
-    typeof post.repostsCount === 'number'
+    typeof post.repostsCount === 'number' &&
+    (post.originalPostId === undefined ||
+      typeof post.originalPostId === 'string') &&
+    (post.originalAuthorId === undefined ||
+      typeof post.originalAuthorId === 'string')
   )
 }
 
@@ -63,10 +67,14 @@ export async function mapPostDocument(
   const storedPost = snapshot.data()
   if (!isPostDocument(storedPost)) return null
 
-  const userSnapshot = await getDoc(
-    doc(firestore, 'users', storedPost.authorId),
-  )
+  const [userSnapshot, originalAuthorSnapshot] = await Promise.all([
+    getDoc(doc(firestore, 'users', storedPost.authorId)),
+    storedPost.originalAuthorId
+      ? getDoc(doc(firestore, 'users', storedPost.originalAuthorId))
+      : Promise.resolve(null),
+  ])
   const author = getUserDocument(userSnapshot.data())
+  const originalAuthor = getUserDocument(originalAuthorSnapshot?.data())
 
   return {
     id: snapshot.id,
@@ -87,5 +95,14 @@ export async function mapPostDocument(
     likes: storedPost.likesCount,
     replies: storedPost.repostsCount,
     comments: storedPost.commentsCount,
+    ...(storedPost.originalPostId
+      ? { originalPostId: storedPost.originalPostId }
+      : {}),
+    ...(storedPost.originalAuthorId
+      ? {
+          originalAuthorId: storedPost.originalAuthorId,
+          originalAuthor: originalAuthor?.name ?? 'Unknown user',
+        }
+      : {}),
   }
 }

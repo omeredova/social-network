@@ -8,6 +8,8 @@ export interface PostDocument {
   readonly commentsCount: number
   readonly likesCount: number
   readonly repostsCount: number
+  readonly originalPostId?: string
+  readonly originalAuthorId?: string
 }
 
 export interface Post {
@@ -24,6 +26,9 @@ export interface Post {
   readonly likes: number
   readonly replies: number
   readonly comments: number
+  readonly originalPostId?: string
+  readonly originalAuthorId?: string
+  readonly originalAuthor?: string
 }
 
 export interface Comment {
