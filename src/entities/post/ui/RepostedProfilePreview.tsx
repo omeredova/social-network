@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import type { RepostedProfile } from '../model/types';
+import { getInitials } from '@/shared/lib/getInitials';
 
 interface RepostedProfilePreviewProps {
   readonly profile: RepostedProfile
@@ -17,9 +18,12 @@ export function RepostedProfilePreview({
       aria-label={`Open ${profile.name}'s profile`}
     >
       <Avatar className="size-14 shrink-0">
-        <AvatarImage src={profile.photoUrl} alt={`Portrait of ${profile.name}`} />
+        <AvatarImage
+          src={profile.photoUrl}
+          alt={`Portrait of ${profile.name}`}
+        />
         <AvatarFallback className="bg-post-foreground text-sm font-semibold text-white">
-          {profile.name.split(' ').map((name) => name[0]).join('')}
+          {getInitials(profile.name)}
         </AvatarFallback>
       </Avatar>
       <div className="min-w-0">

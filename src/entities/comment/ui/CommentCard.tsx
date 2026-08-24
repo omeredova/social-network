@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import type { Comment } from '../model/types';
+import { getInitials } from '@/shared/lib/getInitials';
 
 interface CommentCardProps {
   readonly comment: Comment
@@ -24,13 +25,8 @@ export function CommentCard({ comment, actions }: CommentCardProps) {
               alt={`Portrait of ${comment.author}`}
             />
           )}
-          <AvatarFallback
-            className="rounded-md bg-profile-accent text-xs font-semibold text-white"
-          >
-            {comment.author
-              .split(' ')
-              .map((name) => name[0])
-              .join('')}
+          <AvatarFallback className="rounded-md bg-profile-accent text-xs font-semibold text-white">
+            {getInitials(comment.author)}
           </AvatarFallback>
         </Avatar>
       </Link>

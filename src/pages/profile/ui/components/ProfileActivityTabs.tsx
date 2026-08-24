@@ -10,6 +10,7 @@ import { usePost } from '@/entities/post'
 import { InteractivePostCard } from '@/features/update-post'
 import { Card } from '@/shared/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs'
+import { StatusMessage } from '@/shared/ui/status-message'
 
 interface ProfileActivityTabsProps {
   profile: UserProfile
@@ -67,19 +68,13 @@ export function ProfileActivityTabs({ profile }: ProfileActivityTabsProps) {
         <section aria-label="User comments">
           <div className="space-y-5">
             {commentsQuery.isLoading ? (
-              <p
-                role="status"
-                className="py-10 text-center text-sm text-post-muted"
-              >
+              <StatusMessage className="py-10 text-center">
                 Loading comments…
-              </p>
+              </StatusMessage>
             ) : commentsQuery.isError ? (
-              <p
-                role="alert"
-                className="py-10 text-center text-sm text-destructive"
-              >
+              <StatusMessage tone="destructive" className="py-10 text-center">
                 Unable to load comments.
-              </p>
+              </StatusMessage>
             ) : commentsQuery.data && commentsQuery.data.length > 0 ? (
               commentsQuery.data.map((comment) => (
                 <CommentedPost key={comment.id} comment={comment} />
@@ -101,6 +96,22 @@ interface CommentedPostProps {
   readonly comment: Comment
 }
 
+interface CommentedPostStatusProps {
+  readonly children: string
+  readonly tone?: 'muted' | 'destructive'
+}
+
+function CommentedPostStatus({
+  children,
+  tone = 'muted',
+}: CommentedPostStatusProps) {
+  return (
+    <Card className="rounded-profile-card border-post-border bg-post-surface p-5 shadow-post-card">
+      <StatusMessage tone={tone}>{children}</StatusMessage>
+    </Card>
+  )
+}
+
 function CommentedPost({ comment }: CommentedPostProps) {
   const postQuery = usePost(comment.postId)
 
@@ -110,17 +121,11 @@ function CommentedPost({ comment }: CommentedPostProps) {
       aria-label="Original post with selected user comment"
     >
       {postQuery.isLoading ? (
-        <Card className="rounded-profile-card border-post-border bg-post-surface p-5 shadow-post-card">
-          <p role="status" className="text-sm text-post-muted">
-            Loading commented post…
-          </p>
-        </Card>
+        <CommentedPostStatus>Loading commented post…</CommentedPostStatus>
       ) : postQuery.isError ? (
-        <Card className="rounded-profile-card border-post-border bg-post-surface p-5 shadow-post-card">
-          <p role="alert" className="text-sm text-destructive">
-            Unable to load the commented post.
-          </p>
-        </Card>
+        <CommentedPostStatus tone="destructive">
+          Unable to load the commented post.
+        </CommentedPostStatus>
       ) : postQuery.data ? (
         <InteractivePostCard
           post={postQuery.data}
@@ -128,9 +133,9 @@ function CommentedPost({ comment }: CommentedPostProps) {
           onComment={() => undefined}
         />
       ) : (
-        <Card className="rounded-profile-card border-post-border bg-post-surface p-5 shadow-post-card">
-          <p className="text-sm text-post-muted">This post is no longer available.</p>
-        </Card>
+        <CommentedPostStatus>
+          This post is no longer available.
+        </CommentedPostStatus>
       )}
 
       <Card className="rounded-t-none rounded-b-post-card border-post-border border-t-0 bg-post-surface px-5 shadow-post-card">

@@ -1,6 +1,7 @@
 import type { Post } from '@/entities/post';
 import { CreatePost } from '@/features/create-post';
 import { InteractivePostCard } from '@/features/update-post';
+import { StatusMessage } from '@/shared/ui/status-message';
 
 interface FeedProps {
   posts: readonly Post[]
@@ -9,7 +10,7 @@ interface FeedProps {
 
 export function Feed({ posts, isLoading = false }: FeedProps) {
   if (isLoading) {
-    return <p role="status">Loading posts…</p>
+    return <StatusMessage>Loading posts…</StatusMessage>
   }
 
   return (
