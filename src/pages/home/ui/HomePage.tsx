@@ -6,11 +6,18 @@ import { StatusMessage } from '@/shared/ui/status-message';
 
 export function HomePage() {
   const postsQuery = usePosts()
+  const posts = postsQuery.data?.pages.flatMap((page) => page.posts) ?? []
 
   return (
     <PageContainer>
       <PageBreadcrumb items={[{ label: 'Feed' }]} />
-      <Feed posts={postsQuery.data ?? []} isLoading={postsQuery.isLoading} />
+      <Feed
+        posts={posts}
+        isLoading={postsQuery.isLoading}
+        hasNextPage={postsQuery.hasNextPage}
+        isFetchingNextPage={postsQuery.isFetchingNextPage}
+        onLoadMore={() => void postsQuery.fetchNextPage()}
+      />
       {postsQuery.isError ? (
         <StatusMessage tone="destructive" className="mt-4">
           Unable to load posts. Please try again.

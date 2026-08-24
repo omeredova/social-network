@@ -46,7 +46,7 @@ function ActionButton({ label, count, icon: Icon, active = false, disabled = fal
   return (
     <Button type="button" variant="ghost" size="sm" className="h-8 rounded-post-control px-2 text-post-action-link hover:bg-post-toolbar hover:text-post-action-link-hover focus-visible:ring-post-focus" aria-label={`${label}, ${count.toString()}`} aria-pressed={label === 'Comment' ? undefined : active} disabled={disabled} onClick={onClick}>
       <Icon className={active ? 'size-4 fill-current' : 'size-4'} strokeWidth={1.8} aria-hidden="true" />
-      <span>{label}</span>
+      <span className="hidden lg:inline">{label}</span>
       <span className="text-xs tabular-nums">{count}</span>
     </Button>
   )

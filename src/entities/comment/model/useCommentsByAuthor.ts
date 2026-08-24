@@ -1,11 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import { getCommentsByAuthor } from '../api/getCommentsByAuthor';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import {
+  type AuthorCommentsCursor,
+  getCommentsByAuthor,
+} from '../api/getCommentsByAuthor';
 import { commentKeys } from './commentKeys';
 
 export function useCommentsByAuthor(authorId: string, enabled: boolean) {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: commentKeys.byAuthor(authorId),
-    queryFn: () => getCommentsByAuthor(authorId),
+    queryFn: ({ pageParam }) => getCommentsByAuthor(authorId, pageParam),
+    initialPageParam: null as AuthorCommentsCursor | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     enabled,
     staleTime: 30_000,
   })
