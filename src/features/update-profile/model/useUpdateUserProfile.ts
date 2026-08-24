@@ -37,7 +37,6 @@ function mergeProfile(
       photoAlt: `Portrait of ${profile.name}`,
       postsCount: 0,
       posts: [],
-      comments: [],
     }
   }
 

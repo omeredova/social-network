@@ -25,8 +25,7 @@ export function CommentCard({ comment, actions }: CommentCardProps) {
             />
           )}
           <AvatarFallback
-            className="rounded-md text-xs font-semibold text-white"
-            style={{ backgroundColor: comment.avatarColor }}
+            className="rounded-md bg-profile-accent text-xs font-semibold text-white"
           >
             {comment.author
               .split(' ')

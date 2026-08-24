@@ -27,7 +27,6 @@ export interface Post {
   readonly author: string
   readonly handle: string
   readonly avatarUrl?: string
-  readonly avatarColor: string
   readonly publishedAt: string
   readonly text: string
   readonly imageUrl?: string

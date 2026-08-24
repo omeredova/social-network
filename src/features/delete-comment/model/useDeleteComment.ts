@@ -9,9 +9,12 @@ export function useDeleteComment() {
 
   return useMutation({
     mutationFn: deleteComment,
-    onSuccess: async (_result, { postId }) => {
+    onSuccess: async (_result, { postId, userId }) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: commentKeys.byPost(postId) }),
+        queryClient.invalidateQueries({
+          queryKey: commentKeys.byAuthor(userId),
+        }),
         queryClient.invalidateQueries({ queryKey: postKeys.detail(postId) }),
         queryClient.invalidateQueries({ queryKey: postKeys.lists() }),
         queryClient.invalidateQueries({ queryKey: userProfileKeys.all }),

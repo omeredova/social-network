@@ -1,6 +1,12 @@
+import { useState } from 'react'
 import { MessagesSquare } from 'lucide-react'
 import type { UserProfile } from '@/entities/user'
-import { CommentCard } from '@/entities/comment'
+import {
+  CommentCard,
+  type Comment,
+  useCommentsByAuthor,
+} from '@/entities/comment'
+import { usePost } from '@/entities/post'
 import { InteractivePostCard } from '@/features/update-post'
 import { Card } from '@/shared/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs'
@@ -10,9 +16,18 @@ interface ProfileActivityTabsProps {
 }
 
 export function ProfileActivityTabs({ profile }: ProfileActivityTabsProps) {
+  const [selectedTab, setSelectedTab] = useState<'posts' | 'comments'>('posts')
+  const commentsQuery = useCommentsByAuthor(
+    profile.id,
+    selectedTab === 'comments',
+  )
+
   return (
     <Tabs
-      defaultSelectedKey="posts"
+      selectedKey={selectedTab}
+      onSelectionChange={(key) => {
+        setSelectedTab(key === 'comments' ? 'comments' : 'posts')
+      }}
       className="mt-6"
       aria-label="Profile activity"
     >
@@ -50,10 +65,24 @@ export function ProfileActivityTabs({ profile }: ProfileActivityTabsProps) {
 
       <TabsContent id="comments" className="mx-auto mt-6 max-w-2xl">
         <section aria-label="User comments">
-          <Card className="rounded-profile-card border-post-border bg-post-surface px-5 shadow-post-card">
-            {profile.comments.length > 0 ? (
-              profile.comments.map((comment) => (
-                <CommentCard key={comment.id} comment={comment} />
+          <div className="space-y-5">
+            {commentsQuery.isLoading ? (
+              <p
+                role="status"
+                className="py-10 text-center text-sm text-post-muted"
+              >
+                Loading comments…
+              </p>
+            ) : commentsQuery.isError ? (
+              <p
+                role="alert"
+                className="py-10 text-center text-sm text-destructive"
+              >
+                Unable to load comments.
+              </p>
+            ) : commentsQuery.data && commentsQuery.data.length > 0 ? (
+              commentsQuery.data.map((comment) => (
+                <CommentedPost key={comment.id} comment={comment} />
               ))
             ) : (
               <div className="grid place-items-center gap-2 py-10 text-center text-post-muted">
@@ -61,9 +90,55 @@ export function ProfileActivityTabs({ profile }: ProfileActivityTabsProps) {
                 <p className="text-sm">No comments yet</p>
               </div>
             )}
-          </Card>
+          </div>
         </section>
       </TabsContent>
     </Tabs>
+  )
+}
+
+interface CommentedPostProps {
+  readonly comment: Comment
+}
+
+function CommentedPost({ comment }: CommentedPostProps) {
+  const postQuery = usePost(comment.postId)
+
+  return (
+    <article
+      className="[&>div:first-child>div]:rounded-b-none"
+      aria-label="Original post with selected user comment"
+    >
+      {postQuery.isLoading ? (
+        <Card className="rounded-profile-card border-post-border bg-post-surface p-5 shadow-post-card">
+          <p role="status" className="text-sm text-post-muted">
+            Loading commented post…
+          </p>
+        </Card>
+      ) : postQuery.isError ? (
+        <Card className="rounded-profile-card border-post-border bg-post-surface p-5 shadow-post-card">
+          <p role="alert" className="text-sm text-destructive">
+            Unable to load the commented post.
+          </p>
+        </Card>
+      ) : postQuery.data ? (
+        <InteractivePostCard
+          post={postQuery.data}
+          linked
+          onComment={() => undefined}
+        />
+      ) : (
+        <Card className="rounded-profile-card border-post-border bg-post-surface p-5 shadow-post-card">
+          <p className="text-sm text-post-muted">This post is no longer available.</p>
+        </Card>
+      )}
+
+      <Card className="rounded-t-none rounded-b-post-card border-post-border border-t-0 bg-post-surface px-5 shadow-post-card">
+        <p className="pt-3 text-xs font-medium uppercase tracking-wide text-post-muted">
+          Selected comment
+        </p>
+        <CommentCard comment={comment} />
+      </Card>
+    </article>
   )
 }

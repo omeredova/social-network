@@ -33,6 +33,5 @@ export async function getUserProfile(
     photoAlt: `Portrait of ${storedProfile.name}`,
     postsCount: posts.length,
     posts,
-    comments: [],
   }
 }
