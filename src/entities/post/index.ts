@@ -1,6 +1,5 @@
-export type { Comment, Post, PostDocument, PostCounterField, RepostedProfile } from './model/types';
+export type { Post, PostDocument, PostCounterField, RepostedProfile } from './model/types';
 export { PostCard } from './ui/PostCard';
-export { CommentCard } from './ui/CommentCard';
 export { getPostsByAuthor } from './api/getPostsByAuthor';
 export { postKeys } from './model/postKeys';
 export { usePost } from './model/usePost';

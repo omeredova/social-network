@@ -1,10 +1,11 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   userProfileKeys,
   type EditableUserProfile,
+  type UserIdentity,
   type UserProfile,
-} from '@/entities/user'
-import { updateUserProfile } from '../api/updateUserProfile'
+} from '@/entities/user';
+import { updateUserProfile } from '../api/updateUserProfile';
 
 export function useUpdateUserProfile() {
   const queryClient = useQueryClient()
@@ -12,6 +13,10 @@ export function useUpdateUserProfile() {
   return useMutation({
     mutationFn: updateUserProfile,
     onSuccess: (profile, { profileId }) => {
+      queryClient.setQueryData<UserIdentity>(
+        userProfileKeys.identity(profileId),
+        { name: profile.name, photoUrl: profile.photoUrl },
+      )
       queryClient.setQueryData<UserProfile | null>(
         userProfileKeys.detail(profileId),
         (currentProfile) => mergeProfile(profileId, currentProfile, profile),

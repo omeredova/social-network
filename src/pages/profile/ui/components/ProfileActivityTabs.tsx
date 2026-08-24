@@ -1,6 +1,6 @@
 import { MessagesSquare } from 'lucide-react'
 import type { UserProfile } from '@/entities/user'
-import { CommentCard } from '@/entities/post'
+import { CommentCard } from '@/entities/comment'
 import { InteractivePostCard } from '@/features/update-post'
 import { Card } from '@/shared/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs'
