@@ -101,7 +101,6 @@ export async function mapPostDocument(
     ...(author && author.photoUrl.length > 0
       ? { avatarUrl: author.photoUrl }
       : {}),
-    avatarColor: '#5f6fff',
     publishedAt: formatPublishedAt(storedPost.createdAt.toDate()),
     text: storedPost.content,
     ...(storedPost.imageUrl

@@ -8,9 +8,12 @@ export function useCreateComment() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: createComment,
-    onSuccess: async (_commentId, { postId }) => {
+    onSuccess: async (_commentId, { postId, authorId }) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: commentKeys.byPost(postId) }),
+        queryClient.invalidateQueries({
+          queryKey: commentKeys.byAuthor(authorId),
+        }),
         queryClient.invalidateQueries({ queryKey: postKeys.detail(postId) }),
         queryClient.invalidateQueries({ queryKey: postKeys.lists() }),
         queryClient.invalidateQueries({ queryKey: userProfileKeys.all }),

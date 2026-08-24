@@ -114,7 +114,6 @@ export async function getPostComments(
         ? `@${author.username.replace(/^@/, '')}`
         : '@unknown',
       ...(author?.photoUrl ? { avatarUrl: author.photoUrl } : {}),
-      avatarColor: '#5f6fff',
       publishedAt: formatPublishedAt(comment.createdAt.toDate()),
       text: comment.content,
     }

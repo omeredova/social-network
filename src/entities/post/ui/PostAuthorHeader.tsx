@@ -19,8 +19,7 @@ export function PostAuthorHeader({ post }: PostAuthorHeaderProps) {
         <Avatar className="size-10">
           <AvatarImage src={post.avatarUrl} alt={`Portrait of ${post.author}`} />
           <AvatarFallback
-            className="text-xs font-semibold text-white"
-            style={{ backgroundColor: post.avatarColor }}
+            className="bg-profile-accent text-xs font-semibold text-white"
           >
             {post.author.split(' ').map((name) => name[0]).join('')}
           </AvatarFallback>

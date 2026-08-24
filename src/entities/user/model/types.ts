@@ -1,4 +1,3 @@
-import type { Comment } from '@/entities/comment';
 import type { Post } from '@/entities/post';
 
 export interface UserIdentity {
@@ -16,7 +15,6 @@ export interface UserProfile {
   readonly coverUrl: string
   readonly postsCount: number
   readonly posts: readonly Post[]
-  readonly comments: readonly Comment[]
 }
 
 export type EditableUserProfile = Pick<
