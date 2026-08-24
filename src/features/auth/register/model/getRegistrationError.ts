@@ -1,17 +1,16 @@
 import { getFirebaseErrorCode } from '@/shared/lib/firebase/getFirebaseErrorCode';
-import type { AuthError } from '../../model/authError';
+import { getCommonAuthError, type AuthError } from '../../model/authError';
 
 export function getRegistrationError(error: unknown): AuthError {
-  switch (getFirebaseErrorCode(error)) {
+  const code = getFirebaseErrorCode(error)
+  const commonError = getCommonAuthError(code)
+  if (commonError) return commonError
+
+  switch (code) {
     case 'auth/email-already-in-use':
       return {
         message: 'An account with this email already exists.',
         fieldErrors: { email: 'An account with this email already exists.' },
-      }
-    case 'auth/invalid-email':
-      return {
-        message: 'Enter a valid email address.',
-        fieldErrors: { email: 'Enter a valid email address.' },
       }
     case 'auth/weak-password':
       return {
@@ -21,11 +20,6 @@ export function getRegistrationError(error: unknown): AuthError {
     case 'auth/operation-not-allowed':
       return {
         message: 'Email registration is not enabled for this Firebase project.',
-        fieldErrors: {},
-      }
-    case 'auth/network-request-failed':
-      return {
-        message: 'Check your internet connection and try again.',
         fieldErrors: {},
       }
     default:

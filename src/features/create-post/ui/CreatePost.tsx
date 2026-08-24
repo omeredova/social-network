@@ -69,6 +69,7 @@ export function CreatePost() {
           </div>
           <Button
             type="submit"
+            variant="postAction"
             disabled={
               !text.trim() ||
               !user ||
@@ -76,7 +77,7 @@ export function CreatePost() {
               createPostMutation.isPending
             }
             size="sm"
-            className="rounded-post-control bg-post-action px-3 text-post-toolbar shadow-post-action hover:bg-post-action-hover focus-visible:ring-post-focus"
+            className="px-3"
           >
             {createPostMutation.isPending ? 'Posting…' : 'Post'}
           </Button>
