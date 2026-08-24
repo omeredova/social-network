@@ -8,5 +8,4 @@ export interface Comment {
   readonly avatarColor: string
   readonly publishedAt: string
   readonly text: string
-  readonly likes: number
 }

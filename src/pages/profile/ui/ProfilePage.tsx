@@ -52,7 +52,7 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
     <main className="min-h-screen px-4 py-10 sm:px-6 sm:py-16">
       <div className="mx-auto w-full max-w-2xl">
         <PageBreadcrumb
-          items={[
+            items={[
             { label: 'Feed', href: '/' },
             { label: profile.name },
           ]}
@@ -87,7 +87,7 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
                   <Button
                     type="button"
                     className={profileActionButtonClassName}
-                    disabled={repostProfile.isPending || repostProfile.isSuccess}
+                    disabled={repostProfile.isPending}
                     onClick={() => {
                       repostProfile.mutate({
                         profileId: profile.id,
@@ -96,7 +96,7 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
                     }}
                   >
                     <Repeat2 aria-hidden="true" />
-                    {repostProfile.isSuccess ? 'Reposted' : 'Repost'}
+                    {repostProfile.isPending ? 'Reposting…' : 'Repost'}
                   </Button>
                 )}
                 <Button className={profileActionButtonClassName}>
@@ -119,6 +119,11 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
               {repostProfile.isError && (
                 <p role="alert" className="mt-3 text-sm text-destructive">
                   {repostProfile.error.message}
+                </p>
+              )}
+              {repostProfile.isSuccess && (
+                <p role="status" className="mt-3 text-sm text-post-muted">
+                  Profile reposted.
                 </p>
               )}
               <div className="mt-5 inline-flex items-baseline gap-2 border-l-2 border-profile-accent pl-3">

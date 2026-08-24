@@ -1,4 +1,9 @@
-import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  runTransaction,
+  serverTimestamp,
+} from 'firebase/firestore';
 import { firebaseAuth, firestore } from '@/shared/config/firebase';
 
 export interface RepostProfileInput {
@@ -34,7 +39,9 @@ function getProfileSnapshot(value: unknown): ProfileSnapshot | null {
   }
 }
 
-export async function repostProfile(input: RepostProfileInput): Promise<string> {
+export async function repostProfile(
+  input: RepostProfileInput,
+): Promise<string> {
   if (firebaseAuth.currentUser?.uid !== input.userId) {
     throw new Error('You must be signed in to repost a profile.')
   }
@@ -43,20 +50,13 @@ export async function repostProfile(input: RepostProfileInput): Promise<string> 
   }
 
   const profileReference = doc(firestore, 'users', input.profileId)
-  const repostId = `profile-repost-${input.userId}-${input.profileId}`
-  const repostReference = doc(firestore, 'posts', repostId)
+  const repostReference = doc(collection(firestore, 'posts'))
 
   await runTransaction(firestore, async (transaction) => {
-    const [profileDocument, existingRepost] = await Promise.all([
-      transaction.get(profileReference),
-      transaction.get(repostReference),
-    ])
+    const profileDocument = await transaction.get(profileReference)
     const profile = getProfileSnapshot(profileDocument.data())
 
     if (!profile) throw new Error('The profile is unavailable.')
-    if (existingRepost.exists()) {
-      throw new Error('You have already reposted this profile.')
-    }
 
     transaction.set(repostReference, {
       authorId: input.userId,
@@ -70,5 +70,5 @@ export async function repostProfile(input: RepostProfileInput): Promise<string> 
     })
   })
 
-  return repostId
+  return repostReference.id
 }

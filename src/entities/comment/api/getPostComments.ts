@@ -21,7 +21,6 @@ interface StoredComment {
   readonly postId: string
   readonly content: string
   readonly createdAt: Timestamp
-  readonly likesCount: number
 }
 
 interface StoredUser {
@@ -47,8 +46,7 @@ function isStoredComment(value: unknown): value is StoredComment {
     typeof comment.authorId === 'string' &&
     typeof comment.postId === 'string' &&
     typeof comment.content === 'string' &&
-    comment.createdAt instanceof Timestamp &&
-    typeof comment.likesCount === 'number'
+    comment.createdAt instanceof Timestamp
   )
 }
 
@@ -119,7 +117,6 @@ export async function getPostComments(
       avatarColor: '#5f6fff',
       publishedAt: formatPublishedAt(comment.createdAt.toDate()),
       text: comment.content,
-      likes: comment.likesCount,
     }
   })
   const firstComment = storedComments.at(0)
