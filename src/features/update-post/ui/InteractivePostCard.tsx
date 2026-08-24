@@ -4,10 +4,12 @@ import { useUpdatePost } from '../model/useUpdatePost';
 import { useAuthUser } from '@/features/auth';
 import { useDeletePost } from '@/features/delete-post';
 import { useRepostPost } from '@/features/repost-post';
+import { PostComments } from '@/features/create-comment';
 
 interface InteractivePostCardProps {
   readonly post: Post
   readonly linked?: boolean
+  readonly onComment?: (() => void) | undefined
 }
 
 interface OptimisticDeltas {
@@ -21,7 +23,9 @@ const INITIAL_DELTAS: OptimisticDeltas = { likes: 0, comments: 0, reposts: 0 }
 export function InteractivePostCard({
   post,
   linked = false,
+  onComment,
 }: InteractivePostCardProps) {
+  const [commentsOpen, setCommentsOpen] = useState(false)
   const { user } = useAuthUser()
   const repostPost = useRepostPost()
   const deletePost = useDeletePost()
@@ -32,33 +36,47 @@ export function InteractivePostCard({
     user.uid !== post.authorId &&
     user.uid !== post.originalAuthorId
   const canDelete = user !== null && user.uid === post.authorId
+  const handleComment = () => {
+    if (onComment) {
+      onComment()
+      return
+    }
+    setCommentsOpen((current) => !current)
+  }
 
   return (
-    <PostCard
-      post={optimisticPost}
-      linked={linked}
-      liked={liked}
-      isUpdating={isUpdating || repostPost.isPending || deletePost.isPending}
-      canRepost={canRepost}
-      canDelete={canDelete}
-      deleteError={deletePost.isError ? deletePost.error.message : undefined}
-      onLike={() => {
-        updateCounter('likesCount', liked ? 'decrement' : 'increment')
-      }}
-      onRepost={() => {
-        if (user && canRepost) {
-          repostPost.mutate({ postId: post.id, userId: user.uid })
-        }
-      }}
-      onComment={() => {
-        updateCounter('commentsCount', 'increment')
-      }}
-      onDelete={() => {
-        if (user && canDelete) {
-          deletePost.mutate({ postId: post.id, userId: user.uid })
-        }
-      }}
-    />
+    <div>
+      <PostCard
+        post={optimisticPost}
+        linked={linked}
+        liked={liked}
+        isUpdating={isUpdating || repostPost.isPending || deletePost.isPending}
+        canRepost={canRepost}
+        canDelete={canDelete}
+        deleteError={deletePost.isError ? deletePost.error.message : undefined}
+        onLike={() => {
+          updateCounter('likesCount', liked ? 'decrement' : 'increment')
+        }}
+        onRepost={() => {
+          if (user && canRepost) {
+            repostPost.mutate({ postId: post.id, userId: user.uid })
+          }
+        }}
+        onComment={handleComment}
+        onDelete={() => {
+          if (user && canDelete) {
+            deletePost.mutate({ postId: post.id, userId: user.uid })
+          }
+        }}
+      />
+      {commentsOpen && (
+        <PostComments
+          postId={post.id}
+          commentsCount={optimisticPost.comments}
+          focusRequest={1}
+        />
+      )}
+    </div>
   )
 }
 

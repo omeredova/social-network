@@ -25,8 +25,8 @@ export function SettingsPage() {
             {user ? (
               <AuthenticatedProfileSettings
                 profileId={user.uid}
-                defaultName={user.displayName ?? ''}
-                defaultPhotoUrl={user.photoURL ?? ''}
+                defaultName={user.displayName}
+                defaultPhotoUrl={user.photoURL}
               />
             ) : (
               <p
