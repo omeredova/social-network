@@ -5,6 +5,7 @@ export interface CreatePostInput {
   readonly authorId: string
   readonly content: string
   readonly imageUrl: string
+  readonly location?: string
 }
 
 export async function createPost(input: CreatePostInput): Promise<string> {
@@ -12,6 +13,7 @@ export async function createPost(input: CreatePostInput): Promise<string> {
     authorId: input.authorId,
     content: input.content,
     imageUrl: input.imageUrl,
+    ...(input.location ? { location: input.location } : {}),
     createdAt: serverTimestamp(),
     likesCount: 0,
     commentsCount: 0,

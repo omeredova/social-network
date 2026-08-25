@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { MapPin } from 'lucide-react'
 import { Card, CardContent } from '@/shared/ui/card'
 import type { Post } from '../model/types'
 import { PostActionBar } from './PostActionBar'
@@ -6,6 +7,7 @@ import { PostAuthorHeader } from './PostAuthorHeader'
 import { PostDeleteButton } from './PostDeleteButton'
 import { PostRepostAttribution } from './PostRepostAttribution'
 import { RepostedProfilePreview } from './RepostedProfilePreview'
+import { MentionText } from '@/entities/user/ui/MentionText'
 
 interface PostCardProps {
   post: Post
@@ -59,7 +61,15 @@ export function PostCard({
       <PostAuthorHeader post={post} />
       <CardContent className="p-5 pt-0">
         {post.text && (
-          <p className="text-sm leading-6 text-post-foreground">{post.text}</p>
+          <p className="whitespace-pre-wrap text-sm leading-6 text-post-foreground">
+            <MentionText text={post.text} />
+          </p>
+        )}
+        {post.location && (
+          <p className="mt-3 flex items-center gap-1.5 text-sm text-post-muted">
+            <MapPin className="size-4 shrink-0" aria-hidden="true" />
+            <span>{post.location}</span>
+          </p>
         )}
         {post.repostedProfile && (
           <RepostedProfilePreview profile={post.repostedProfile} />
