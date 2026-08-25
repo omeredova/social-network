@@ -49,7 +49,7 @@ export function Sidebar() {
             setIsMobileMenuOpen(false)
           }}
         >
-          Logo
+          ConnectInno
         </Link>
         <button
           type="button"

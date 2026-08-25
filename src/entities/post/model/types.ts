@@ -12,6 +12,7 @@ export interface PostDocument {
   readonly authorId: string
   readonly content: string
   readonly imageUrl: string
+  readonly location?: string
   readonly createdAt: Timestamp
   readonly commentsCount: number
   readonly likesCount: number
@@ -31,6 +32,7 @@ export interface Post {
   readonly text: string
   readonly imageUrl?: string
   readonly imageAlt?: string
+  readonly location?: string
   readonly likes: number
   readonly replies: number
   readonly comments: number

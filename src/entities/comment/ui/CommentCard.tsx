@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import type { Comment } from '../model/types';
 import { getInitials } from '@/shared/lib/getInitials';
+import { MentionText } from '@/entities/user/ui/MentionText';
 
 interface CommentCardProps {
   readonly comment: Comment
@@ -58,7 +59,7 @@ export function CommentCard({ comment, actions }: CommentCardProps) {
           {actions}
         </div>
         <p className="my-1 whitespace-pre-wrap text-sm leading-6 text-post-foreground">
-          {comment.text}
+          <MentionText text={comment.text} />
         </p>
       </div>
     </article>
