@@ -38,9 +38,9 @@ export function Sidebar() {
   }, [isMobileMenuOpen])
 
   return (
-    <SidebarPrimitive
+    <SidebarPrimitive 
       className="sticky top-0 z-40 h-16 w-full shrink-0 px-4 md:h-screen md:w-60 md:px-6 md:py-8"
-    >
+      >
       <SidebarHeader className="flex h-16 flex-row items-center justify-between p-0 text-center md:h-auto md:block md:p-2">
         <Link
           to="/"
@@ -61,7 +61,7 @@ export function Sidebar() {
             setIsMobileMenuOpen((isOpen) => !isOpen)
           }}
         >
-          {isMobileMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+          {isMobileMenuOpen ? (<X aria-hidden="true" />) : (<Menu aria-hidden="true" />)}
         </button>
       </SidebarHeader>
 
@@ -108,9 +108,15 @@ export function Sidebar() {
                 )}
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton type="button" className={menuButtonClassName}>
-                  <Mail className="size-3.5" strokeWidth={1.8} aria-hidden="true" />
-                  <span>messages</span>
+                <SidebarMenuButton asChild className={menuButtonClassName}>
+                  <Link to="/messages">
+                    <Mail
+                      className="size-3.5"
+                      strokeWidth={1.8}
+                      aria-hidden="true"
+                    />
+                    <span>messages</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

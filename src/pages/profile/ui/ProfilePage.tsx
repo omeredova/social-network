@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { MessageCircle, Repeat2 } from 'lucide-react';
+import { Repeat2 } from 'lucide-react';
 import { useUserProfile } from '@/entities/user';
 import { useAuthUser } from '@/features/auth';
 import { useRepostProfile } from '@/features/repost-profile';
@@ -12,6 +12,7 @@ import { NotFoundState } from '@/shared/ui/not-found-state';
 import { PageContainer } from '@/shared/ui/page-container';
 import { StatusMessage } from '@/shared/ui/status-message';
 import { getInitials } from '@/shared/lib/getInitials';
+import { MessageUserLink } from '@/features/message-user';
 
 interface ProfilePageProps {
   profileId: string
@@ -91,13 +92,12 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
                   {repostProfile.isPending ? 'Reposting…' : 'Repost'}
                 </Button>
               )}
-              <Button
-                variant="postAction"
-                className={profileActionButtonClassName}
-              >
-                <MessageCircle aria-hidden="true" />
-                Message
-              </Button>
+              {user && user.uid !== profile.id && (
+                <MessageUserLink
+                  profileId={profile.id}
+                  className={profileActionButtonClassName}
+                />
+              )}
             </div>
           </div>
 
