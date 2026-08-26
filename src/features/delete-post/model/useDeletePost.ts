@@ -8,14 +8,24 @@ export function useDeletePost() {
 
   return useMutation({
     mutationFn: deletePost,
-    onSuccess: async (_result, { postId, userId }) => {
-      await Promise.all([
+    onSuccess: async (originalPostId, { postId, userId }) => {
+      const invalidations = [
         queryClient.invalidateQueries({ queryKey: postKeys.detail(postId) }),
         queryClient.invalidateQueries({ queryKey: postKeys.lists() }),
         queryClient.invalidateQueries({
           queryKey: userProfileKeys.detail(userId),
         }),
-      ])
+      ]
+
+      if (originalPostId) {
+        invalidations.push(
+          queryClient.invalidateQueries({
+            queryKey: postKeys.detail(originalPostId),
+          }),
+        )
+      }
+
+      await Promise.all(invalidations)
     },
   })
 }

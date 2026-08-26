@@ -79,7 +79,7 @@ export const Sidebar = observer(function Sidebar() {
 
       <SidebarContent
         id="mobile-navigation"
-        className={`${isMobileMenuOpen ? 'flex' : 'hidden'} absolute left-0 top-16 h-auto w-full overflow-visible border-t border-white/15 bg-sidebar px-4 py-3 shadow-lg md:static md:mt-10 md:flex md:flex-1 md:border-0 md:p-0 md:shadow-none`}
+        className={`${isMobileMenuOpen ? 'flex' : 'hidden'} absolute left-0 top-16 h-auto w-full overflow-visible border-t border-white/15 bg-sidebar px-4 py-3 shadow-lg md:static md:mt-5 md:flex md:flex-1 md:border-0 md:p-0 md:shadow-none`}
       >
         <SidebarGroup className="p-0">
           <nav
