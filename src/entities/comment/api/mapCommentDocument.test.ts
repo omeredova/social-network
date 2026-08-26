@@ -20,12 +20,16 @@ describe('comment document parsing', () => {
         postId: 'post-1',
         content: 'Hello',
         createdAt,
+        likesCount: 2,
+        likeAuthor: ['user-1', 'user-2'],
       }),
     ).toEqual({
       authorId: 'user-1',
       postId: 'post-1',
       content: 'Hello',
       createdAt,
+      likesCount: 2,
+      likeAuthor: ['user-1', 'user-2'],
     })
     expect(
       parseStoredUser({
@@ -66,6 +70,8 @@ describe('mapComment', () => {
           postId: 'post-1',
           content: 'Hello',
           createdAt: Timestamp.fromDate(new Date('2026-08-24T10:00:00Z')),
+          likesCount: 1,
+          likeAuthor: ['user-2'],
         },
         author: {
           name: 'Maya Brooks',
@@ -82,6 +88,8 @@ describe('mapComment', () => {
       avatarUrl: 'https://example.com/maya.jpg',
       publishedAt: '30 min',
       text: 'Hello',
+      likesCount: 1,
+      likeAuthor: ['user-2'],
     })
   })
 
@@ -97,6 +105,8 @@ describe('mapComment', () => {
           postId: 'post-1',
           content: 'Hello',
           createdAt: Timestamp.fromDate(new Date('2026-08-24T10:00:00Z')),
+          likesCount: 0,
+          likeAuthor: [],
         },
         author: null,
       }),
@@ -108,6 +118,8 @@ describe('mapComment', () => {
       handle: '@unknown',
       publishedAt: 'just now',
       text: 'Hello',
+      likesCount: 0,
+      likeAuthor: [],
     })
   })
 
@@ -122,10 +134,25 @@ describe('mapComment', () => {
         postId: 'post-1',
         content: 'Hello',
         createdAt: Timestamp.fromDate(new Date('2026-08-24T10:00:00Z')),
+        likesCount: 0,
+        likeAuthor: [],
       },
       author: { name: 'Maya Brooks', username: '', photoUrl: '' },
     })
 
     expect(comment.handle).toBe('@unknown')
+  })
+
+  it('defaults missing legacy like fields to an empty like state', () => {
+    const createdAt = Timestamp.fromDate(new Date('2026-08-24T10:00:00Z'))
+
+    expect(
+      parseStoredComment({
+        authorId: 'user-1',
+        postId: 'post-1',
+        content: 'Legacy comment',
+        createdAt,
+      }),
+    ).toMatchObject({ likesCount: 0, likeAuthor: [] })
   })
 })

@@ -16,6 +16,7 @@ export interface PostDocument {
   readonly createdAt: Timestamp
   readonly commentsCount: number
   readonly likesCount: number
+  readonly likeAuthor?: readonly string[]
   readonly repostsCount: number
   readonly originalPostId?: string
   readonly originalAuthorId?: string
@@ -34,6 +35,7 @@ export interface Post {
   readonly imageAlt?: string
   readonly location?: string
   readonly likes: number
+  readonly likeAuthor: readonly string[]
   readonly replies: number
   readonly comments: number
   readonly originalPostId?: string
