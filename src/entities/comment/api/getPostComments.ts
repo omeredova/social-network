@@ -19,7 +19,7 @@ import {
   parseStoredUser,
 } from './mapCommentDocument';
 
-const COMMENTS_PAGE_SIZE = 3
+const COMMENTS_PAGE_SIZE = 10
 
 export interface CommentCursor {
   readonly createdAt: Timestamp
