@@ -1,11 +1,18 @@
 import { useState } from 'react'
 import { makeAutoObservable } from 'mobx'
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react'
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { ChatMessage, MessageSender } from '@/entities/message'
 import type { UserProfile } from '@/entities/user'
 import type { EchoMessagePayload } from '@/features/chat'
+import { ChatWidget } from './ChatWidget'
 import { MessagesPanel } from './MessagesPanel'
 
 const participantQuery = vi.hoisted(() => ({
@@ -223,5 +230,28 @@ describe('MessagesPanel', () => {
     expect(
       screen.queryByRole('button', { name: /New User/ }),
     ).not.toBeInTheDocument()
+  })
+})
+
+describe('ChatWidget', () => {
+  it('opens from the launcher and starts a selected conversation', async () => {
+    const user = userEvent.setup()
+    render(<ChatWidget />)
+
+    await user.click(screen.getByRole('button', { name: 'Open chat' }))
+
+    expect(screen.getByRole('dialog', { name: 'Chat' })).toBeVisible()
+    expect(screen.getByRole('heading', { name: 'Start a chat' })).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: /Jack User/ }))
+
+    expect(screen.getByRole('heading', { name: 'Jack User' })).toBeVisible()
+    expect(
+      screen.getByText('Start a conversation with Jack User'),
+    ).toBeVisible()
+    expect(screen.getByLabelText('Message')).toHaveAttribute(
+      'placeholder',
+      'Message Jack User',
+    )
   })
 })
