@@ -13,9 +13,15 @@ const profile: UserProfile = {
   photoUrl: '',
   photoAlt: 'Registered User',
   coverUrl: '',
-  postsCount: 0,
-  posts: [],
 }
+
+vi.mock('@/entities/post', () => ({
+  usePostsByAuthor: () => ({
+    data: [],
+    isLoading: false,
+    isError: false,
+  }),
+}))
 
 vi.mock('@/entities/user', () => ({
   useUserProfile: (profileId: string) => ({

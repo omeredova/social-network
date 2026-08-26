@@ -1,5 +1,5 @@
 import { usePosts } from '@/entities/post';
-import { Feed } from '@/widgets/feed';
+import { Feed } from '@/widgets/post';
 import { PageBreadcrumb } from '@/shared/ui/page-breadcrumb';
 import { PageContainer } from '@/shared/ui/page-container';
 import { StatusMessage } from '@/shared/ui/status-message';

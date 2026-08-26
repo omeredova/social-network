@@ -5,21 +5,25 @@ import { useCurrentTime } from '@/shared/lib/useCurrentTime';
 import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
 import { StatusMessage } from '@/shared/ui/status-message';
-import { useMessagesPanel } from '../model/useMessagesPanel';
+import { ChatWidgetStore } from '../model/ChatWidgetStore';
+import {
+  useMessagesPanel,
+  type UseMessagesPanelResult,
+} from '../model/useMessagesPanel';
 import { ConversationAvatar } from './ConversationAvatar';
 import { ConversationMessages } from './ConversationMessages';
 import { MessageComposer } from './MessageComposer';
 
 export const ChatWidget = observer(function ChatWidget() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [widget] = useState(() => new ChatWidgetStore())
+  const panel = useMessagesPanel()
 
   return (
     <div className="fixed right-4 bottom-4 z-50 flex flex-col items-end sm:right-6 sm:bottom-6">
-      {isOpen ? (
+      {widget.isOpen ? (
         <ChatWidgetPanel
-          onClose={() => {
-            setIsOpen(false)
-          }}
+          panel={panel}
+          widget={widget}
         />
       ) : null}
       <Button
@@ -27,12 +31,12 @@ export const ChatWidget = observer(function ChatWidget() {
         size="icon"
         className="size-14 rounded-full bg-profile-accent text-white shadow-lg hover:bg-profile-accent/90"
         aria-label="Open chat"
-        aria-expanded={isOpen}
+        aria-expanded={widget.isOpen}
         onClick={() => {
-          setIsOpen((open) => !open)
+          widget.toggle()
         }}
       >
-        {isOpen ? (
+        {widget.isOpen ? (
           <X className="size-5" aria-hidden="true" />
         ) : (
           <MessageCircle className="size-6" aria-hidden="true" />
@@ -43,15 +47,15 @@ export const ChatWidget = observer(function ChatWidget() {
 })
 
 interface ChatWidgetPanelProps {
-  readonly onClose: () => void
+  readonly panel: UseMessagesPanelResult
+  readonly widget: ChatWidgetStore
 }
 
 const ChatWidgetPanel = observer(function ChatWidgetPanel({
-  onClose,
+  panel,
+  widget,
 }: ChatWidgetPanelProps) {
   const currentTime = useCurrentTime()
-  const panel = useMessagesPanel()
-  const [isChoosingConversation, setIsChoosingConversation] = useState(true)
   const selectedConversation = panel.store.selectedConversation
 
   return (
@@ -61,21 +65,21 @@ const ChatWidgetPanel = observer(function ChatWidgetPanel({
       aria-label="Chat"
     >
       <header className="flex min-h-14 items-center gap-3 border-b border-post-border px-4">
-        {!isChoosingConversation && selectedConversation ? (
+        {!widget.isChoosingConversation && selectedConversation ? (
           <Button
             type="button"
             variant="ghost"
             size="icon"
             aria-label="Choose conversation"
             onClick={() => {
-              setIsChoosingConversation(true)
+              widget.showConversationList()
             }}
           >
             <Users aria-hidden="true" />
           </Button>
         ) : null}
         <h2 className="min-w-0 flex-1 truncate font-semibold text-post-foreground">
-          {!isChoosingConversation && selectedConversation
+          {!widget.isChoosingConversation && selectedConversation
             ? selectedConversation.participant.name
             : 'Start a chat'}
         </h2>
@@ -84,7 +88,9 @@ const ChatWidgetPanel = observer(function ChatWidgetPanel({
           variant="ghost"
           size="icon"
           aria-label="Close chat"
-          onClick={onClose}
+          onClick={() => {
+            widget.close()
+          }}
         >
           <X aria-hidden="true" />
         </Button>
@@ -98,7 +104,7 @@ const ChatWidgetPanel = observer(function ChatWidgetPanel({
         <StatusMessage className="flex-1 p-6" tone="destructive">
           Conversations could not be loaded.
         </StatusMessage>
-      ) : isChoosingConversation ? (
+      ) : widget.isChoosingConversation ? (
         <div className="min-h-0 flex-1 overflow-y-auto p-2">
           {panel.store.conversations.length === 0 ? (
             <StatusMessage className="p-6">
@@ -112,7 +118,7 @@ const ChatWidgetPanel = observer(function ChatWidgetPanel({
                 className="flex w-full min-w-0 items-center gap-3 rounded-lg px-3 py-3 text-left transition-colors hover:bg-post-toolbar focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-post-focus"
                 onClick={() => {
                   panel.store.selectConversation(conversation.id)
-                  setIsChoosingConversation(false)
+                  widget.showSelectedConversation()
                 }}
               >
                 <ConversationAvatar

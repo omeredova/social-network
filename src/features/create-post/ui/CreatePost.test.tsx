@@ -5,10 +5,6 @@ import { CreatePost } from './CreatePost'
 
 const mutateAsync = vi.fn<() => Promise<string>>()
 
-vi.mock('@/features/auth', () => ({
-  useAuthUser: () => ({ user: { uid: 'user-1' }, isLoading: false }),
-}))
-
 vi.mock('../model/useCreatePost', () => ({
   useCreatePost: () => ({
     mutateAsync,
@@ -27,7 +23,7 @@ describe('CreatePost', () => {
 
   it('adds a trimmed optional location to a new post', async () => {
     const user = userEvent.setup()
-    render(<CreatePost />)
+    render(<CreatePost authorId="user-1" isAuthLoading={false} />)
 
     await user.type(screen.getByLabelText('Post text'), 'A sunny day')
     await user.click(screen.getByRole('button', { name: 'Add location' }))
@@ -45,7 +41,7 @@ describe('CreatePost', () => {
 
   it('does not store a location when none is provided', async () => {
     const user = userEvent.setup()
-    render(<CreatePost />)
+    render(<CreatePost authorId="user-1" isAuthLoading={false} />)
 
     await user.type(screen.getByLabelText('Post text'), 'No location')
     await user.click(screen.getByRole('button', { name: 'Post' }))
@@ -59,7 +55,7 @@ describe('CreatePost', () => {
 
   it('inserts an @ when the tag people option is selected', async () => {
     const user = userEvent.setup()
-    render(<CreatePost />)
+    render(<CreatePost authorId="user-1" isAuthLoading={false} />)
 
     await user.type(screen.getByLabelText('Post text'), 'Hello')
     await user.click(screen.getByRole('button', { name: 'Tag people' }))

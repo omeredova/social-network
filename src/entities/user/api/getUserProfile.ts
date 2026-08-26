@@ -1,4 +1,3 @@
-import { getPostsByAuthor } from '@/entities/post';
 import type { EditableUserProfile, UserProfile } from '../model/types';
 import { getUserProfileDocument } from './getUserProfileDocument';
 
@@ -27,13 +26,9 @@ export async function getUserProfile(
   if (!isEditableUserProfile(storedProfile)) return null
 
   const resolvedProfileId = snapshot.id
-  const posts = await getPostsByAuthor(resolvedProfileId)
-
   return {
     id: resolvedProfileId,
     ...storedProfile,
     photoAlt: `Portrait of ${storedProfile.name}`,
-    postsCount: posts.length,
-    posts,
   }
 }

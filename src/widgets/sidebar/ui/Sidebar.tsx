@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
 import { Link } from '@tanstack/react-router';
 import { User, Mail, Settings, LogOut, Menu, X } from 'lucide-react';
 import { useLogoutAction } from '@/features/auth/logout';
@@ -16,7 +17,7 @@ import { useAuthUser } from '@/features/auth';
 const menuButtonClassName =
   'h-auto min-h-11 gap-3 rounded-md px-3 text-sm font-medium text-white hover:bg-white/10 md:min-h-0 md:gap-1 md:rounded-none md:px-2 md:hover:bg-sidebar'
 
-export function Sidebar() {
+export const Sidebar = observer(function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { user, isLoading: isAuthLoading } = useAuthUser()
   const { logout, isPending: isLogoutPending, isError: isLogoutError } =
@@ -149,4 +150,4 @@ export function Sidebar() {
       </SidebarContent>
     </SidebarPrimitive>
   )
-}
+})

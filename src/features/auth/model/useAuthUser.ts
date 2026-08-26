@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
-import { onAuthStateChanged, type User } from 'firebase/auth';
 import { useUserIdentity } from '@/entities/user';
-import { firebaseAuth } from '@/shared/config/firebase';
+import { useAuthSession } from './useAuthSession';
 
 export interface AuthUser {
   readonly uid: string
@@ -16,25 +14,15 @@ export interface AuthUserState {
 }
 
 export function useAuthUser(): AuthUserState {
-  const [authState, setAuthState] = useState<{
-    user: User | null
-    isLoading: boolean
-  }>({
-    user: firebaseAuth.currentUser,
-    isLoading: true,
-  })
+  const session = useAuthSession()
+  const authState = {
+    user: session.user,
+    isLoading: session.isLoading,
+  }
   const identityQuery = useUserIdentity(authState.user?.uid ?? null)
-
-  useEffect(
-    () =>
-      onAuthStateChanged(firebaseAuth, (user) => {
-        setAuthState({ user, isLoading: false })
-      }),
-    [],
-  )
-
-  const isIdentityLoading = authState.user !== null && identityQuery.isPending
-  const isLoading = authState.isLoading || isIdentityLoading
+  const isLoading =
+    authState.isLoading ||
+    (authState.user !== null && identityQuery.isPending)
 
   if (!authState.user || isLoading) return { user: null, isLoading }
 

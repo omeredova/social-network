@@ -4,17 +4,20 @@ import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
 import { Textarea } from '@/shared/ui/textarea';
 import { Input } from '@/shared/ui/input';
-import { useAuthUser } from '@/features/auth';
 import { useCreatePost } from '../model/useCreatePost';
 
 const optionButtonClassName =
   'size-9 rounded-post-control bg-post-toolbar text-post-foreground shadow-post-control hover:bg-post-toolbar-hover hover:text-post-foreground focus-visible:ring-post-focus'
 
-export function CreatePost() {
+interface CreatePostProps {
+  readonly authorId: string | null
+  readonly isAuthLoading: boolean
+}
+
+export function CreatePost({ authorId, isAuthLoading }: CreatePostProps) {
   const [text, setText] = useState('')
   const [location, setLocation] = useState('')
   const [isLocationVisible, setIsLocationVisible] = useState(false)
-  const { user, isLoading: isAuthLoading } = useAuthUser()
   const createPostMutation = useCreatePost()
   const textAreaReference = useRef<HTMLTextAreaElement>(null)
 
@@ -36,10 +39,10 @@ export function CreatePost() {
   async function handleSubmit(): Promise<void> {
     const content = text.trim()
 
-    if (!user || !content) return
+    if (!authorId || !content) return
 
     await createPostMutation.mutateAsync({
-      authorId: user.uid,
+      authorId,
       content,
       imageUrl: '',
       ...(location.trim() ? { location: location.trim() } : {}),
@@ -123,7 +126,7 @@ export function CreatePost() {
             variant="postAction"
             disabled={
               !text.trim() ||
-              !user ||
+              !authorId ||
               isAuthLoading ||
               createPostMutation.isPending
             }
@@ -134,7 +137,7 @@ export function CreatePost() {
           </Button>
         </div>
 
-        {!isAuthLoading && !user ? (
+        {!isAuthLoading && !authorId ? (
           <p role="status" className="px-4 py-2 text-sm text-post-muted">
             Sign in to create a post.
           </p>

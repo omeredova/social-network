@@ -11,7 +11,7 @@ import { useAuthUser } from '@/features/auth';
 import { useEchoChat } from '@/features/chat';
 import { MessagesPanelStore } from './MessagesPanelStore';
 
-interface UseMessagesPanelResult {
+export interface UseMessagesPanelResult {
   readonly store: MessagesPanelStore
   readonly status: ReturnType<typeof useEchoChat>['status']
   readonly isLoading: boolean

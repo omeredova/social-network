@@ -7,7 +7,7 @@ import { PostAuthorHeader } from './PostAuthorHeader'
 import { PostDeleteButton } from './PostDeleteButton'
 import { PostRepostAttribution } from './PostRepostAttribution'
 import { RepostedProfilePreview } from './RepostedProfilePreview'
-import { MentionText } from '@/entities/user/ui/MentionText'
+import { MentionText } from '@/entities/user/@x/post'
 
 interface PostCardProps {
   post: Post

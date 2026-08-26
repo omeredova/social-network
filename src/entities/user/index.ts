@@ -2,4 +2,3 @@ export type { EditableUserProfile, UserIdentity, UserProfile } from './model/typ
 export { userProfileKeys } from './model/userProfileKeys';
 export { useUserIdentity } from './model/useUserIdentity';
 export { useUserProfile } from './model/useUserProfile';
-export { MentionText } from './ui/MentionText';

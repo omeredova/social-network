@@ -5,8 +5,13 @@ import { Card, CardContent } from '@/shared/ui/card'
 import { PageBreadcrumb } from '@/shared/ui/page-breadcrumb'
 import { PageContainer } from '@/shared/ui/page-container'
 import { StatusMessage } from '@/shared/ui/status-message'
+import { observer } from 'mobx-react-lite'
 
 export function SettingsPage() {
+  return <ObservedSettingsPage />
+}
+
+const ObservedSettingsPage = observer(function ObservedSettingsPage() {
   const { user, isLoading } = useAuthUser()
 
   return (
@@ -40,7 +45,7 @@ export function SettingsPage() {
       </Card>
     </PageContainer>
   )
-}
+})
 
 interface AuthenticatedProfileSettingsProps {
   profileId: string

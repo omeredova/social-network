@@ -1,8 +1,10 @@
+import { observer } from 'mobx-react-lite';
 import type { Post } from '@/entities/post';
+import { useAuthUser } from '@/features/auth';
 import { CreatePost } from '@/features/create-post';
-import { InteractivePostCard } from '@/features/update-post';
 import { InfiniteScrollTrigger } from '@/shared/ui/infinite-scroll-trigger';
 import { StatusMessage } from '@/shared/ui/status-message';
+import { InteractivePostCard } from './InteractivePostCard';
 
 interface FeedProps {
   posts: readonly Post[]
@@ -12,20 +14,22 @@ interface FeedProps {
   onLoadMore?: () => void
 }
 
-export function Feed({
+export const Feed = observer(function Feed({
   posts,
   isLoading = false,
   hasNextPage = false,
   isFetchingNextPage = false,
   onLoadMore,
 }: FeedProps) {
+  const { user, isLoading: isAuthLoading } = useAuthUser()
+
   if (isLoading) {
     return <StatusMessage>Loading posts…</StatusMessage>
   }
 
   return (
     <>
-      <CreatePost />
+      <CreatePost authorId={user?.uid ?? null} isAuthLoading={isAuthLoading} />
       {posts.length > 0 ? (
         <div className="space-y-5">
           {posts.map((post) => (
@@ -47,4 +51,4 @@ export function Feed({
       )}
     </>
   )
-}
+})

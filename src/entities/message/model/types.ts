@@ -1,4 +1,4 @@
-import type { UserIdentity } from '@/entities/user';
+import type { UserIdentity } from '@/entities/user/@x/message';
 
 export interface MessageSender extends UserIdentity {
   readonly id: string
