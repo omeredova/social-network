@@ -31,14 +31,16 @@ function getDeletablePost(value: unknown): DeletablePost | null {
   }
 }
 
-export async function deletePost(input: DeletePostInput): Promise<void> {
+export async function deletePost(
+  input: DeletePostInput,
+): Promise<string | null> {
   if (firebaseAuth.currentUser?.uid !== input.userId) {
     throw new Error('You must be signed in to delete a post.')
   }
 
   const postReference = doc(firestore, 'posts', input.postId)
 
-  await runTransaction(firestore, async (transaction) => {
+  return runTransaction(firestore, async (transaction) => {
     const postSnapshot = await transaction.get(postReference)
     const post = getDeletablePost(postSnapshot.data())
 
@@ -57,5 +59,6 @@ export async function deletePost(input: DeletePostInput): Promise<void> {
     }
 
     transaction.delete(postReference)
+    return post.originalPostId ?? null
   })
 }
