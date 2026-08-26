@@ -1,14 +1,25 @@
 import { Outlet, useRouterState } from '@tanstack/react-router'
+import { observer } from 'mobx-react-lite'
+import type { FC } from 'react'
+import { useAuthSession } from '@/features/auth/model/useAuthSession'
+import { AuthRedirect } from '@/features/auth/ui/AuthRedirect'
+import { EchoChatProvider } from '@/features/chat'
 import { Sidebar } from '@/widgets/sidebar'
 import { SidebarProvider } from '@/shared/ui/sidebar'
 import { ChatWidget } from '@/widgets/messages'
 
-export function RootLayout() {
+export const RootLayout: FC = observer(function RootLayout() {
+  const session = useAuthSession()
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
   const isAuthRoute = pathname.startsWith('/account/')
   const isWidgetRoute = pathname === '/messages' || isAuthRoute
+
+  if (!session.user && !isAuthRoute) {
+    return <AuthRedirect />
+  }
+
   if (isAuthRoute) {
     return (
       <>
@@ -19,12 +30,14 @@ export function RootLayout() {
   }
 
   return (
-    <SidebarProvider className="block min-h-screen md:flex">
-      <Sidebar />
-      <div className="min-w-0 flex-1">
-        <Outlet />
-      </div>
-      {!isWidgetRoute ? <ChatWidget /> : null}
-    </SidebarProvider>
+    <EchoChatProvider>
+      <SidebarProvider className="block min-h-screen md:flex">
+        <Sidebar />
+        <div className="min-w-0 flex-1">
+          <Outlet />
+        </div>
+        {!isWidgetRoute ? <ChatWidget /> : null}
+      </SidebarProvider>
+    </EchoChatProvider>
   )
-}
+})
