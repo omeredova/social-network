@@ -7,4 +7,6 @@ export interface Comment {
   readonly avatarUrl?: string
   readonly publishedAt: string
   readonly text: string
+  readonly likesCount: number
+  readonly likeAuthor: readonly string[]
 }

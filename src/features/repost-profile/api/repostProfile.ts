@@ -64,6 +64,7 @@ export async function repostProfile(
       imageUrl: '',
       createdAt: serverTimestamp(),
       likesCount: 0,
+      likeAuthor: [],
       commentsCount: 0,
       repostsCount: 0,
       repostedProfile: { id: input.profileId, ...profile },

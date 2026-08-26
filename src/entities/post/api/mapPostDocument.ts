@@ -93,6 +93,15 @@ export async function mapPostDocument(
       : {}),
     ...(storedPost.location ? { location: storedPost.location } : {}),
     likes: storedPost.likesCount,
+    likeAuthor: Array.isArray(storedPost.likeAuthor)
+      ? [
+          ...new Set(
+            storedPost.likeAuthor.filter(
+              (userId): userId is string => typeof userId === 'string',
+            ),
+          ),
+        ]
+      : [],
     replies: storedPost.repostsCount,
     comments: storedPost.commentsCount,
     ...(storedPost.originalPostId

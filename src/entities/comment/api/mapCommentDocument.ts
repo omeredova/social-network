@@ -7,6 +7,8 @@ export interface StoredComment {
   readonly postId: string
   readonly content: string
   readonly createdAt: Timestamp
+  readonly likesCount: number
+  readonly likeAuthor: readonly string[]
 }
 
 export interface StoredUser {
@@ -33,6 +35,19 @@ export function parseStoredComment(value: unknown): StoredComment | null {
     postId: comment.postId,
     content: comment.content,
     createdAt: comment.createdAt,
+    likesCount:
+      typeof comment.likesCount === 'number' && comment.likesCount >= 0
+        ? comment.likesCount
+        : 0,
+    likeAuthor: Array.isArray(comment.likeAuthor)
+      ? [
+          ...new Set(
+            comment.likeAuthor.filter(
+              (userId): userId is string => typeof userId === 'string',
+            ),
+          ),
+        ]
+      : [],
   }
 }
 
@@ -71,6 +86,8 @@ export function mapComment({ id, comment, author }: MapCommentInput): Comment {
     ...(author?.photoUrl ? { avatarUrl: author.photoUrl } : {}),
     publishedAt: formatRelativeTime(comment.createdAt.toDate()),
     text: comment.content,
+    likesCount: comment.likesCount,
+    likeAuthor: comment.likeAuthor,
   }
 }
 

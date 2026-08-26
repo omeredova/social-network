@@ -5,10 +5,12 @@ import {
   useCommentsByAuthor,
 } from '@/entities/comment';
 import { usePost } from '@/entities/post';
+import { useAuthUser } from '@/features/auth';
 import { InteractivePostCard } from '@/widgets/post';
 import { Card } from '@/shared/ui/card';
 import { InfiniteScrollTrigger } from '@/shared/ui/infinite-scroll-trigger';
 import { StatusMessage } from '@/shared/ui/status-message';
+import { CommentLikeButton } from '@/features/like-comment';
 
 interface ProfileCommentsTabProps {
   readonly profileId: string
@@ -66,6 +68,7 @@ interface CommentedPostProps {
 
 function CommentedPost({ comment }: CommentedPostProps) {
   const postQuery = usePost(comment.postId)
+  const { user } = useAuthUser()
 
   return (
     <article
@@ -94,7 +97,12 @@ function CommentedPost({ comment }: CommentedPostProps) {
         <p className="pt-3 text-xs font-medium uppercase tracking-wide text-post-muted">
           Selected comment
         </p>
-        <CommentCard comment={comment} />
+        <CommentCard
+          comment={comment}
+          actions={
+            <CommentLikeButton comment={comment} userId={user?.uid ?? null} />
+          }
+        />
       </Card>
     </article>
   )

@@ -101,6 +101,7 @@ export async function repostPost(input: RepostPostInput): Promise<string> {
       ...(source.location ? { location: source.location } : {}),
       createdAt: serverTimestamp(),
       likesCount: 0,
+      likeAuthor: [],
       commentsCount: 0,
       repostsCount: 0,
       originalPostId,

@@ -31,7 +31,7 @@ export const InteractivePostCard = observer(function InteractivePostCard({
   const repostPost = useRepostPost()
   const deletePost = useDeletePost()
   const { optimisticPost, liked, updateCounter, isUpdating } =
-    useOptimisticUpdate(post)
+    useOptimisticUpdate(post, user?.uid ?? null)
   const canRepost =
     user !== null &&
     user.uid !== post.authorId &&
@@ -56,7 +56,9 @@ export const InteractivePostCard = observer(function InteractivePostCard({
         canDelete={canDelete}
         deleteError={deletePost.isError ? deletePost.error.message : undefined}
         onLike={() => {
-          updateCounter('likesCount', liked ? 'decrement' : 'increment')
+          if (user) {
+            updateCounter('likesCount', liked ? 'decrement' : 'increment')
+          }
         }}
         onRepost={() => {
           if (user && canRepost) {
@@ -81,10 +83,12 @@ export const InteractivePostCard = observer(function InteractivePostCard({
   )
 })
 
-function useOptimisticUpdate(post: Post) {
+function useOptimisticUpdate(post: Post, userId: string | null) {
   const updatePost = useUpdatePost()
   const [deltas, setDeltas] = useState(INITIAL_DELTAS)
-  const [liked, setLiked] = useState(false)
+  const [liked, setLiked] = useState(
+    userId !== null && post.likeAuthor.includes(userId),
+  )
 
   const updateCounter = (
     field: PostCounterField,
@@ -96,7 +100,12 @@ function useOptimisticUpdate(post: Post) {
     if (field === 'likesCount') setLiked((current) => !current)
 
     updatePost.mutate(
-      { postId: post.id, field, operation },
+      {
+        postId: post.id,
+        field,
+        operation,
+        ...(field === 'likesCount' && userId ? { userId } : {}),
+      },
       {
         onSuccess: () => {
           setDeltas((current) => changeDelta(current, field, -amount))

@@ -16,6 +16,7 @@ export async function createPost(input: CreatePostInput): Promise<string> {
     ...(input.location ? { location: input.location } : {}),
     createdAt: serverTimestamp(),
     likesCount: 0,
+    likeAuthor: [],
     commentsCount: 0,
     repostsCount: 0,
   })

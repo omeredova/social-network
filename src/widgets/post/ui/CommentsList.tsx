@@ -3,6 +3,7 @@ import { ChevronUp, MessageCircle } from 'lucide-react';
 import { CommentCard, usePostComments } from '@/entities/comment';
 import { useAuthUser } from '@/features/auth';
 import { CommentDeleteButton } from '@/features/delete-comment';
+import { CommentLikeButton } from '@/features/like-comment';
 import { Button } from '@/shared/ui/button';
 import {
   Empty,
@@ -154,14 +155,17 @@ export function CommentsList({
           key={comment.id}
           comment={comment}
           actions={
-            user?.uid === comment.authorId ? (
-              <CommentDeleteButton
-                commentId={comment.id}
-                postId={postId}
-                userId={user.uid}
-                authorName={comment.author}
-              />
-            ) : undefined
+            <div className="flex items-center gap-1">
+              <CommentLikeButton comment={comment} userId={user?.uid ?? null} />
+              {user?.uid === comment.authorId && (
+                <CommentDeleteButton
+                  commentId={comment.id}
+                  postId={postId}
+                  userId={user.uid}
+                  authorName={comment.author}
+                />
+              )}
+            </div>
           }
         />
       ))}

@@ -28,6 +28,8 @@ export async function createComment(
     postId: input.postId,
     content,
     createdAt: serverTimestamp(),
+    likesCount: 0,
+    likeAuthor: [],
   })
   batch.update(postReference, { commentsCount: increment(1) })
   await batch.commit()
