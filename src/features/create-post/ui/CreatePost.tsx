@@ -1,16 +1,11 @@
 import { useRef, useState } from 'react';
-import { Camera, MapPin, Smile, UserRound } from 'lucide-react';
+import { MapPin, UserRound } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
 import { Textarea } from '@/shared/ui/textarea';
 import { Input } from '@/shared/ui/input';
 import { useAuthUser } from '@/features/auth';
 import { useCreatePost } from '../model/useCreatePost';
-
-const postOptions = [
-  { label: 'Add photo', icon: Camera },
-  { label: 'Add emoji', icon: Smile },
-]
 
 const optionButtonClassName =
   'size-9 rounded-post-control bg-post-toolbar text-post-foreground shadow-post-control hover:bg-post-toolbar-hover hover:text-post-foreground focus-visible:ring-post-focus'
@@ -122,19 +117,6 @@ export function CreatePost() {
             >
               <MapPin className="size-4" strokeWidth={1.8} />
             </Button>
-            {postOptions.map(({ label, icon: Icon }) => (
-              <Button
-                key={label}
-                type="button"
-                variant="ghost"
-                size="icon"
-                title={label}
-                aria-label={label}
-                className={optionButtonClassName}
-              >
-                <Icon className="size-4" strokeWidth={1.8} />
-              </Button>
-            ))}
           </div>
           <Button
             type="submit"
