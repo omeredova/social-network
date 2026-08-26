@@ -32,4 +32,17 @@ function AvatarFallback({ className, ...props }: React.ComponentProps<typeof Ava
   )
 }
 
-export { Avatar, AvatarFallback, AvatarImage }
+function AvatarBadge({ className, ...props }: React.ComponentProps<'span'>) {
+  return (
+    <span
+      data-slot="avatar-badge"
+      className={cn(
+        'absolute right-0 bottom-0 size-2.5 rounded-full border-2 border-background',
+        className,
+      )}
+      {...props}
+    />
+  )
+}
+
+export { Avatar, AvatarFallback, AvatarImage, AvatarBadge }
