@@ -132,8 +132,6 @@ describe('MessagesPanel', () => {
       photoUrl: '',
       photoAlt: 'New User',
       coverUrl: '',
-      postsCount: 0,
-      posts: [],
     }
 
     render(<MessagesPanel initialProfile={profile} />)
@@ -159,8 +157,6 @@ describe('MessagesPanel', () => {
       photoUrl: '',
       photoAlt: 'New User',
       coverUrl: '',
-      postsCount: 0,
-      posts: [],
     }
     render(<MessagesPanel initialProfile={profile} />)
 
@@ -253,5 +249,22 @@ describe('ChatWidget', () => {
       'placeholder',
       'Message Jack User',
     )
+  })
+
+  it('preserves the selected conversation and draft after closing', async () => {
+    const user = userEvent.setup()
+    render(<ChatWidget />)
+
+    await user.click(screen.getByRole('button', { name: 'Open chat' }))
+    await user.click(screen.getByRole('button', { name: /Jack User/ }))
+    await user.type(screen.getByLabelText('Message'), 'Unsent draft')
+    await user.click(screen.getByRole('button', { name: 'Close chat' }))
+
+    expect(screen.queryByRole('dialog', { name: 'Chat' })).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Open chat' }))
+
+    expect(screen.getByRole('heading', { name: 'Jack User' })).toBeVisible()
+    expect(screen.getByLabelText('Message')).toHaveValue('Unsent draft')
   })
 })

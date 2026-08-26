@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { usePostComments } from '@/entities/comment'
-import { useAuthUser } from '@/features/auth'
-import { Card, CardHeader } from '@/shared/ui/card'
-import { CommentComposer } from './CommentComposer'
-import { CommentsList } from './CommentsList'
+import { useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { usePostComments } from '@/entities/comment';
+import { useAuthUser } from '@/features/auth';
+import { CommentComposer } from '@/features/create-comment';
+import { Card, CardHeader } from '@/shared/ui/card';
+import { CommentsList } from './CommentsList';
 
 interface PostCommentsProps {
   readonly postId: string
@@ -11,7 +12,7 @@ interface PostCommentsProps {
   readonly focusRequest?: number
 }
 
-export function PostComments({
+export const PostComments = observer(function PostComments({
   postId,
   commentsCount,
   focusRequest = 0,
@@ -49,4 +50,4 @@ export function PostComments({
       />
     </Card>
   )
-}
+})

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { usePost } from '@/entities/post';
-import { PostComments } from '@/features/create-comment';
-import { InteractivePostCard } from '@/features/update-post';
+import { InteractivePostCard, PostComments } from '@/widgets/post';
 import { Button } from '@/shared/ui/button';
 import { PageBreadcrumb } from '@/shared/ui/page-breadcrumb';
 import { NotFoundState } from '@/shared/ui/not-found-state';

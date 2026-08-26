@@ -5,7 +5,7 @@ import {
   useCommentsByAuthor,
 } from '@/entities/comment';
 import { usePost } from '@/entities/post';
-import { InteractivePostCard } from '@/features/update-post';
+import { InteractivePostCard } from '@/widgets/post';
 import { Card } from '@/shared/ui/card';
 import { InfiniteScrollTrigger } from '@/shared/ui/infinite-scroll-trigger';
 import { StatusMessage } from '@/shared/ui/status-message';

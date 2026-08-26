@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import type { Comment } from '../model/types';
 import { getInitials } from '@/shared/lib/getInitials';
-import { MentionText } from '@/entities/user/ui/MentionText';
+import { MentionText } from '@/entities/user/@x/comment';
 
 interface CommentCardProps {
   readonly comment: Comment

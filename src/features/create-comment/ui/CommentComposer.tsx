@@ -1,6 +1,5 @@
 import { type SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { useAuthUser } from '@/features/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -9,8 +8,14 @@ import { useCreateComment } from '../model/useCreateComment';
 interface CommentComposerProps {
   readonly postId: string
   readonly focusRequest: number
-  readonly user: ReturnType<typeof useAuthUser>['user']
+  readonly user: CommentComposerUser | null
   readonly onCommentCreated: (commentId: string) => void
+}
+
+interface CommentComposerUser {
+  readonly uid: string
+  readonly displayName: string
+  readonly photoURL: string
 }
 
 export function CommentComposer({

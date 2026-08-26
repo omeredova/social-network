@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { observer } from 'mobx-react-lite';
 import { PostCard, type Post, type PostCounterField } from '@/entities/post';
-import { useUpdatePost } from '../model/useUpdatePost';
 import { useAuthUser } from '@/features/auth';
 import { useDeletePost } from '@/features/delete-post';
 import { useRepostPost } from '@/features/repost-post';
-import { PostComments } from '@/features/create-comment';
+import { useUpdatePost } from '@/features/update-post';
+import { PostComments } from './PostComments';
 
 interface InteractivePostCardProps {
   readonly post: Post
@@ -20,7 +21,7 @@ interface OptimisticDeltas {
 
 const INITIAL_DELTAS: OptimisticDeltas = { likes: 0, comments: 0, reposts: 0 }
 
-export function InteractivePostCard({
+export const InteractivePostCard = observer(function InteractivePostCard({
   post,
   linked = false,
   onComment,
@@ -78,7 +79,7 @@ export function InteractivePostCard({
       )}
     </div>
   )
-}
+})
 
 function useOptimisticUpdate(post: Post) {
   const updatePost = useUpdatePost()

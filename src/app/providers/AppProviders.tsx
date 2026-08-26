@@ -4,15 +4,18 @@ import { configureMobX } from '@/app/providers/configureMobX';
 import { queryClient } from '@/app/providers/queryClient';
 import { router } from '@/app/router/router';
 import { EchoChatProvider } from '@/features/chat';
+import { AuthSessionProvider } from '@/features/auth';
 
 configureMobX()
 
 export function AppProviders(){
   return (
     <QueryClientProvider client={queryClient}>
-      <EchoChatProvider>
-        <RouterProvider router={router} context={{ queryClient }} />
-      </EchoChatProvider>
+      <AuthSessionProvider>
+        <EchoChatProvider>
+          <RouterProvider router={router} context={{ queryClient }} />
+        </EchoChatProvider>
+      </AuthSessionProvider>
     </QueryClientProvider>
   )
 }

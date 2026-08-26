@@ -1,5 +1,7 @@
 import { Link } from '@tanstack/react-router';
+import { observer } from 'mobx-react-lite';
 import { Repeat2 } from 'lucide-react';
+import { usePostsByAuthor } from '@/entities/post';
 import { useUserProfile } from '@/entities/user';
 import { useAuthUser } from '@/features/auth';
 import { useRepostProfile } from '@/features/repost-profile';
@@ -21,8 +23,9 @@ interface ProfilePageProps {
 const profileActionButtonClassName =
   'border border-post-action px-4 transition-all hover:-translate-y-0.5 hover:border-post-action-hover hover:shadow-profile-avatar'
 
-export function ProfilePage({ profileId }: ProfilePageProps) {
+export const ProfilePage = observer(function ProfilePage({ profileId }: ProfilePageProps) {
   const { data: profile, isLoading, isError } = useUserProfile(profileId)
+  const postsQuery = usePostsByAuthor(profile?.id ?? null)
   const { user } = useAuthUser()
   const repostProfile = useRepostProfile()
 
@@ -121,7 +124,7 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
             )}
             <div className="mt-5 inline-flex items-baseline gap-2 border-l-2 border-profile-accent pl-3">
               <strong className="text-xl tabular-nums text-post-foreground">
-                {profile.postsCount}
+                {postsQuery.data?.length ?? 0}
               </strong>
               <span className="text-sm text-post-muted">posts</span>
             </div>
@@ -129,7 +132,12 @@ export function ProfilePage({ profileId }: ProfilePageProps) {
         </CardContent>
       </Card>
 
-      <ProfileActivityTabs profile={profile} />
+      <ProfileActivityTabs
+        profileId={profile.id}
+        posts={postsQuery.data ?? []}
+        isPostsLoading={postsQuery.isLoading}
+        isPostsError={postsQuery.isError}
+      />
     </PageContainer>
   )
-}
+})

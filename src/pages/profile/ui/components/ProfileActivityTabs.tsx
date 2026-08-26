@@ -1,14 +1,23 @@
 import { useState } from 'react'
-import type { UserProfile } from '@/entities/user'
-import { InteractivePostCard } from '@/features/update-post'
+import type { Post } from '@/entities/post'
+import { InteractivePostCard } from '@/widgets/post'
+import { StatusMessage } from '@/shared/ui/status-message'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs'
 import { ProfileCommentsTab } from './ProfileCommentsTab'
 
 interface ProfileActivityTabsProps {
-  profile: UserProfile
+  readonly profileId: string
+  readonly posts: readonly Post[]
+  readonly isPostsLoading: boolean
+  readonly isPostsError: boolean
 }
 
-export function ProfileActivityTabs({ profile }: ProfileActivityTabsProps) {
+export function ProfileActivityTabs({
+  profileId,
+  posts,
+  isPostsLoading,
+  isPostsError,
+}: ProfileActivityTabsProps) {
   const [selectedTab, setSelectedTab] = useState<'posts' | 'comments'>('posts')
   return (
     <Tabs
@@ -39,8 +48,14 @@ export function ProfileActivityTabs({ profile }: ProfileActivityTabsProps) {
 
       <TabsContent id="posts" className="mx-auto mt-6 max-w-2xl">
         <section aria-label="User posts" className="space-y-5">
-          {profile.posts.length > 0 ? (
-            profile.posts.map((post) => (
+          {isPostsLoading ? (
+            <StatusMessage>Loading posts…</StatusMessage>
+          ) : isPostsError ? (
+            <StatusMessage tone="destructive">
+              Unable to load posts.
+            </StatusMessage>
+          ) : posts.length > 0 ? (
+            posts.map((post) => (
               <InteractivePostCard key={post.id} post={post} linked />
             ))
           ) : (
@@ -54,7 +69,7 @@ export function ProfileActivityTabs({ profile }: ProfileActivityTabsProps) {
       <TabsContent id="comments" className="mx-auto mt-6 max-w-2xl">
         <section aria-label="User comments">
           {selectedTab === 'comments' ? (
-            <ProfileCommentsTab profileId={profile.id} />
+            <ProfileCommentsTab profileId={profileId} />
           ) : null}
         </section>
       </TabsContent>
