@@ -7,6 +7,7 @@ import { EchoChatProvider } from '@/features/chat'
 import { Sidebar } from '@/widgets/sidebar'
 import { SidebarProvider } from '@/shared/ui/sidebar'
 import { ChatWidget } from '@/widgets/messages'
+import { StatusMessage } from '@/shared/ui/status-message'
 
 export const RootLayout: FC = observer(function RootLayout() {
   const session = useAuthSession()
@@ -15,6 +16,10 @@ export const RootLayout: FC = observer(function RootLayout() {
   })
   const isAuthRoute = pathname.startsWith('/account/')
   const isWidgetRoute = pathname === '/messages' || isAuthRoute
+
+  if (session.isLoading && !isAuthRoute) {
+    return <StatusMessage>Restoring your session...</StatusMessage>
+  }
 
   if (!session.user && !isAuthRoute) {
     return <AuthRedirect />
