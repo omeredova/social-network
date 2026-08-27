@@ -81,10 +81,7 @@ with posts, view profiles, and exchange messages through the chat interface.
 | `npm run format` | Format the project with Prettier |
 | `npm run format:check` | Check formatting without modifying files |
 
-## Deployment links
-
-- Vercel project: To be added
-- Repository: https://github.com/omeredova/social-network
+[## Deployment link](https://social-network-taupe-three.vercel.app/)
 
 ## Project architecture
 
