@@ -26,7 +26,7 @@ export function AuthCredentialsFields({
           name="email"
           type="email"
           autoComplete="email"
-          placeholder="m@example.com"
+          placeholder="Enter your email"
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? emailErrorId : undefined}
           className={cn(errors.email && 'border-destructive focus-visible:ring-destructive')}
@@ -43,6 +43,7 @@ export function AuthCredentialsFields({
           id={`${idPrefix}-password`}
           name="password"
           type="password"
+          placeholder="Enter your password"
           autoComplete={passwordAutoComplete}
           aria-invalid={Boolean(errors.password)}
           aria-describedby={errors.password ? passwordErrorId : undefined}
