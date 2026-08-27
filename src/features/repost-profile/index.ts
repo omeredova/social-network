@@ -1,1 +1,1 @@
-export { useRepostProfile } from './model/useRepostProfile';
+export { RepostProfileButton } from './ui/RepostProfileButton';

@@ -1,10 +1,9 @@
 import { Link } from '@tanstack/react-router';
 import { observer } from 'mobx-react-lite';
-import { Repeat2 } from 'lucide-react';
 import { usePostsByAuthor } from '@/entities/post';
 import { useUserProfile } from '@/entities/user';
 import { useAuthUser } from '@/features/auth';
-import { useRepostProfile } from '@/features/repost-profile';
+import { RepostProfileButton } from '@/features/repost-profile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent } from '@/shared/ui/card';
@@ -27,7 +26,6 @@ export const ProfilePage = observer(function ProfilePage({ profileId }: ProfileP
   const { data: profile, isLoading, isError } = useUserProfile(profileId)
   const postsQuery = usePostsByAuthor(profile?.id ?? null)
   const { user } = useAuthUser()
-  const repostProfile = useRepostProfile()
 
   if (isLoading) {
     return <StatusMessage className="p-10">Loading profile…</StatusMessage>
@@ -79,21 +77,11 @@ export const ProfilePage = observer(function ProfilePage({ profileId }: ProfileP
 
             <div className="mt-4 flex flex-wrap justify-end gap-2 sm:mt-5">
               {user && user.uid !== profile.id && (
-                <Button
-                  type="button"
-                  variant="postAction"
+                <RepostProfileButton
+                  profileId={profile.id}
+                  userId={user.uid}
                   className={profileActionButtonClassName}
-                  disabled={repostProfile.isPending}
-                  onClick={() => {
-                    repostProfile.mutate({
-                      profileId: profile.id,
-                      userId: user.uid,
-                    })
-                  }}
-                >
-                  <Repeat2 aria-hidden="true" />
-                  {repostProfile.isPending ? 'Reposting…' : 'Repost'}
-                </Button>
+                />
               )}
               {user && user.uid !== profile.id && (
                 <MessageUserLink
@@ -114,14 +102,6 @@ export const ProfilePage = observer(function ProfilePage({ profileId }: ProfileP
             <p className="mt-4 text-sm leading-6 text-post-foreground sm:text-base">
               {profile.description}
             </p>
-            {repostProfile.isError && (
-              <StatusMessage tone="destructive" className="mt-3">
-                {repostProfile.error.message}
-              </StatusMessage>
-            )}
-            {repostProfile.isSuccess && (
-              <StatusMessage className="mt-3">Profile reposted.</StatusMessage>
-            )}
             <div className="mt-5 inline-flex items-baseline gap-2 border-l-2 border-profile-accent pl-3">
               <strong className="text-xl tabular-nums text-post-foreground">
                 {postsQuery.data?.length ?? 0}

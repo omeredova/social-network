@@ -44,12 +44,7 @@ vi.mock('@/features/auth', () => ({
 }))
 
 vi.mock('@/features/repost-profile', () => ({
-  useRepostProfile: () => ({
-    mutate: vi.fn(),
-    isPending: false,
-    isError: false,
-    isSuccess: false,
-  }),
+  RepostProfileButton: () => <button type="button">Repost</button>,
 }))
 
 vi.mock('@/features/message-user', () => ({

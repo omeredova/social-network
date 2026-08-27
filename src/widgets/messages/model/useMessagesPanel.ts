@@ -8,8 +8,7 @@ import {
 import { useMessageParticipants, type MessageSender } from '@/entities/message';
 import type { UserProfile } from '@/entities/user';
 import { useAuthUser } from '@/features/auth';
-import { useEchoChat } from '@/features/chat';
-import { MessagesPanelStore } from './MessagesPanelStore';
+import { MessagesPanelStore, useEchoChat } from '@/features/chat';
 
 export interface UseMessagesPanelResult {
   readonly store: MessagesPanelStore

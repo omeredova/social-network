@@ -5,7 +5,7 @@ import {
   type MessageSender,
 } from '@/entities/message'
 import type { UserProfile } from '@/entities/user'
-import type { EchoChatState } from '@/features/chat'
+import type { EchoChatState } from './EchoChatStore'
 
 export interface ConversationPreview extends Conversation {
   readonly latestMessage: ChatMessage | undefined
@@ -159,6 +159,7 @@ export class MessagesPanelStore {
     if (wasSent) this.draft = ''
     return wasSent
   }
+
   private createConversations(): readonly Conversation[] {
     const profiles =
       this.initialProfile &&

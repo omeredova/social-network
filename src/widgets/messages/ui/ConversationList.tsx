@@ -2,7 +2,7 @@ import { Search, X } from 'lucide-react';
 import { formatRelativeTime } from '@/shared/lib/formatRelativeTime';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
-import type { ConversationPreview } from '../model/MessagesPanelStore';
+import type { ConversationPreview } from '@/features/chat';
 import { ConversationAvatar } from './ConversationAvatar';
 
 interface ConversationListProps {
