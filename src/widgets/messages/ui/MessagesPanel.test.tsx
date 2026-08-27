@@ -65,8 +65,12 @@ vi.mock('@/features/auth', () => ({
   }),
 }))
 
-vi.mock('@/features/chat', () => ({
-  useEchoChat: () => {
+vi.mock('@/features/chat', async (importOriginal) => {
+  const original = await importOriginal<typeof import('@/features/chat')>()
+
+  return {
+    ...original,
+    useEchoChat: () => {
     const [chat] = useState(() =>
       makeAutoObservable(
         {
@@ -94,9 +98,10 @@ vi.mock('@/features/chat', () => ({
         { autoBind: true },
       ),
     )
-    return chat
-  },
-}))
+      return chat
+    },
+  }
+})
 
 afterEach(() => {
   cleanup()
