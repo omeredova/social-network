@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MessagesRouteImport } from './routes/messages'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as AccountLoginRouteImport } from './routes/account/login'
+import { Route as AccountRegisterRouteImport } from './routes/account/register'
+import { Route as PostsPostIdRouteImport } from './routes/posts.$postId'
+import { Route as ProfileProfileIdRouteImport } from './routes/profile.$profileId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountLoginRoute = AccountLoginRouteImport.update({
+  id: '/account/login',
+  path: '/account/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRegisterRoute = AccountRegisterRouteImport.update({
+  id: '/account/register',
+  path: '/account/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostsPostIdRoute = PostsPostIdRouteImport.update({
+  id: '/posts/$postId',
+  path: '/posts/$postId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileProfileIdRoute = ProfileProfileIdRouteImport.update({
+  id: '/profile/$profileId',
+  path: '/profile/$profileId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/messages': typeof MessagesRoute
+  '/settings': typeof SettingsRoute
+  '/account/login': typeof AccountLoginRoute
+  '/account/register': typeof AccountRegisterRoute
+  '/posts/$postId': typeof PostsPostIdRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/messages': typeof MessagesRoute
+  '/settings': typeof SettingsRoute
+  '/account/login': typeof AccountLoginRoute
+  '/account/register': typeof AccountRegisterRoute
+  '/posts/$postId': typeof PostsPostIdRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/messages': typeof MessagesRoute
+  '/settings': typeof SettingsRoute
+  '/account/login': typeof AccountLoginRoute
+  '/account/register': typeof AccountRegisterRoute
+  '/posts/$postId': typeof PostsPostIdRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/messages'
+    | '/settings'
+    | '/account/login'
+    | '/account/register'
+    | '/posts/$postId'
+    | '/profile/$profileId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/messages'
+    | '/settings'
+    | '/account/login'
+    | '/account/register'
+    | '/posts/$postId'
+    | '/profile/$profileId'
+  id:
+    | '__root__'
+    | '/'
+    | '/messages'
+    | '/settings'
+    | '/account/login'
+    | '/account/register'
+    | '/posts/$postId'
+    | '/profile/$profileId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MessagesRoute: typeof MessagesRoute
+  SettingsRoute: typeof SettingsRoute
+  AccountLoginRoute: typeof AccountLoginRoute
+  AccountRegisterRoute: typeof AccountRegisterRoute
+  PostsPostIdRoute: typeof PostsPostIdRoute
+  ProfileProfileIdRoute: typeof ProfileProfileIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/login': {
+      id: '/account/login'
+      path: '/account/login'
+      fullPath: '/account/login'
+      preLoaderRoute: typeof AccountLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/register': {
+      id: '/account/register'
+      path: '/account/register'
+      fullPath: '/account/register'
+      preLoaderRoute: typeof AccountRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/posts/$postId': {
+      id: '/posts/$postId'
+      path: '/posts/$postId'
+      fullPath: '/posts/$postId'
+      preLoaderRoute: typeof PostsPostIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/$profileId': {
+      id: '/profile/$profileId'
+      path: '/profile/$profileId'
+      fullPath: '/profile/$profileId'
+      preLoaderRoute: typeof ProfileProfileIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MessagesRoute: MessagesRoute,
+  SettingsRoute: SettingsRoute,
+  AccountLoginRoute: AccountLoginRoute,
+  AccountRegisterRoute: AccountRegisterRoute,
+  PostsPostIdRoute: PostsPostIdRoute,
+  ProfileProfileIdRoute: ProfileProfileIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

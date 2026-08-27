@@ -1,0 +1,1 @@
+export { useLogoutAction } from './model/useLogoutAction';

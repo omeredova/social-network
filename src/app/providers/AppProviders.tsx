@@ -3,13 +3,16 @@ import { RouterProvider } from '@tanstack/react-router';
 import { configureMobX } from '@/app/providers/configureMobX';
 import { queryClient } from '@/app/providers/queryClient';
 import { router } from '@/app/router/router';
+import { AuthSessionProvider } from '@/features/auth';
 
 configureMobX()
 
-export const AppProviders = () => {
+export function AppProviders(){
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} context={{ queryClient }} />
+      <AuthSessionProvider>
+        <RouterProvider router={router} context={{ queryClient }} />
+      </AuthSessionProvider>
     </QueryClientProvider>
   )
 }
